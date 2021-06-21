@@ -1,0 +1,24 @@
+{
+  "name": "forceDAO-automate-strategy-with-AAVE-on-polygon",
+  "version": "1.0.0",
+  "description": "",
+  "directories": {
+    "test": "test"
+  },
+  "scripts": {
+    "test": "truffle test ./test/test-local/* --network local",
+    "test:Something": "truffle test ./test/test-local/Something.test.js --network local",
+    "compile:local": "truffle compile --reset --network local",
+    "migrate:local": "truffle migrate --reset --network local"
+  },
+  "author": "masaun",
+  "license": "MIT",
+  "dependencies": {
+    "@openzeppelin/contracts": "^3.4.1",
+    "@openzeppelin/test-helpers": "^0.5.10",
+    "@truffle/hdwallet-provider": "^1.3.0",
+    "dotenv": "^8.2.0",
+    "eth-block-tracker": "^4.4.3"
+  },
+  "devDependencies": {}
+}
