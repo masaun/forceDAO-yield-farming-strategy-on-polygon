@@ -8,7 +8,7 @@ import { IERC20 } from "@openzeppelin/contracts/token/ERC20/IERC20.sol";
 
 /**
  * @title YieldFarmingStrategy contract
- **/
+ */
 contract YieldFarmingStrategy {
 
     ILendingPoolAddressesProvider public provider;
@@ -45,7 +45,7 @@ contract YieldFarmingStrategy {
     /**
      * @notice - Allows depositors to enable/disable a specific deposited asset as collateral
      * @param asset - The address of the underlying asset deposited
-     **/
+     */
     function collateralToAave(address asset) public returns (bool) {
         bool useAsCollateral = true; // [Note]: `true` if the user wants to use the deposit as collateral, `false` otherwise
         lendingPool.setUserUseReserveAsCollateral(asset, useAsCollateral);
@@ -72,11 +72,4 @@ contract YieldFarmingStrategy {
         lendingPool.borrow(asset, amount, interestRateMode, referralCode, onBehalfOf);
     }
 
-
-    /**
-     * @notice - Lend ERC20 token into the Curve AAVE Lending Market
-     */
-    function lendToCurveAave() public returns (bool) {
-        // [Todo]:
-    }
 }

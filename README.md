@@ -46,7 +46,7 @@ npm run migrate:local
 ### ③ Test (on local)
 - 1: Start ganache-cli
 ```
-ganache-cli -d
+$ ganache-cli -d --fork https://polygon-mainnet.infura.io/v3/{YOUR INFURA KEY}@{BLOCK_NUMBER}
 ```
 (※ `-d` option is the option in order to be able to use same address on Ganache-CLI every time)  
 (※ Please stop and re-start if an error of `"Returned error: project ID does not have access to archive state"` is displayed)  
