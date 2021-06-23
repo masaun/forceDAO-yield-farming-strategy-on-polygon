@@ -1,6 +1,7 @@
 // SPDX-License-Identifier: AGPL-3.0-or-later
 pragma solidity 0.6.12;
-pragma abicoder v2;
+pragma experimental ABIEncoderV2;
+//pragma abicoder v2;
 
 import "../masset/MassetStructs.sol";
 

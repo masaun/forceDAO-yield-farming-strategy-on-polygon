@@ -1,5 +1,6 @@
 // SPDX-License-Identifier: AGPL-3.0-or-later
 pragma solidity 0.6.12;
+pragma experimental ABIEncoderV2;
 
 interface IBoostDirector {
     function getBalance(address _user) external returns (uint256);
