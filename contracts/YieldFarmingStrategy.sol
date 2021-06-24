@@ -1,26 +1,32 @@
 // SPDX-License-Identifier: agpl-3.0
 pragma solidity 0.6.12;
 
-import { ILendingPool } from './aave-v2/interfaces/ILendingPool.sol';
-import { ILendingPoolAddressesProvider } from './aave-v2/interfaces/ILendingPoolAddressesProvider.sol';
 import { IERC20 } from "@openzeppelin/contracts/token/ERC20/IERC20.sol";
 
+// AAVE
+import { ILendingPool } from './aave-v2/interfaces/ILendingPool.sol';
+import { ILendingPoolAddressesProvider } from './aave-v2/interfaces/ILendingPoolAddressesProvider.sol';
+
+// mStable
+import { ISavingsContractV1, ISavingsContractV2 } from "./mstable/interfaces/ISavingsContract.sol";
 
 /**
  * @title YieldFarmingStrategy contract
  */
 contract YieldFarmingStrategy {
 
+    IERC20 public dai;
     ILendingPoolAddressesProvider public provider;
     ILendingPool public lendingPool;
-    IERC20 public dai;
+    ISavingsContractV2 public savingsV2;
 
     address DAI_ADDRESS;
 
-    constructor(ILendingPoolAddressesProvider _provider, ILendingPool _lendingPool, IERC20 _dai) public {
+    constructor(ILendingPoolAddressesProvider _provider, ILendingPool _lendingPool, ISavingsContractV2 _savingsV2, IERC20 _dai) public {
+        dai = _dai;
         provider = _provider;
         lendingPool = ILendingPool(provider.getLendingPool());
-        dai = _dai;
+        savingsV2 = _savingsV2;
 
         DAI_ADDRESS = address(dai);
     }
