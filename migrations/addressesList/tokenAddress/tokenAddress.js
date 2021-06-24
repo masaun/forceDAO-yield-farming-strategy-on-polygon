@@ -1,9 +1,6 @@
 module.exports = {
-    "Mainnet": {
+    "Polygon Mainnet": {
     },
-    "Görli": {
-        "Lido": {
-            "": ""
-        }
+    "Polygon Mumbai": {
     }
 }
