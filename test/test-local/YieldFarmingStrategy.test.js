@@ -15,7 +15,9 @@ const SaveWrapper = artifacts.require("SaveWrapper")
 
 /// Deployed-addresses
 const SAVING_WRAPPER = contractAddressList["Polygon Mainnet"]["mAsset Save Wrapper"]
+const NEXUS = contractAddressList["Polygon Mainnet"]["Nexus"]
 const MUSD = tokenAddressList["Polygon Mainnet"]["mUSD"]
+
 
 /**
  * @notice - This is the test of YieldFarmingStrategy.sol
