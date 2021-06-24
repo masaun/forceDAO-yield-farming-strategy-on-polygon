@@ -80,9 +80,15 @@ contract YieldFarmingStrategy {
 
     /**
      * @notice - Save ERC20 token into the mStable Vault
-     */
-    function saveIntoMStable(uint256 amount) public returns (bool) {
-        savingsV2.depositSavings(amount);
+     * @dev Deposit the senders savings to the vault, and credit them internally with "credits".
+     *      Credit amount is calculated as a ratio of deposit amount and exchange rate:
+     *                    credits = underlying / exchangeRate
+     *      We will first update the internal exchange rate by collecting any interest generated on the underlying.
+     * @param underlying      Units of underlying to deposit into savings vault
+     * @return creditsIssued   Units of credits (imUSD) issued
+     */ 
+    function saveIntoMStable(uint256 underlying) public returns (bool) {
+        savingsV2.depositSavings(underlying);
     }
 
 }
