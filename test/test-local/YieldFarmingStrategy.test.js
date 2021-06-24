@@ -11,10 +11,10 @@ const tokenAddressList = require("../../migrations/addressesList/tokenAddress/to
 
 /// Artifact of smart contracts 
 const YieldFarmingStrategy = artifacts.require("YieldFarmingStrategy")
-const ISavingsContractV2 = artifacts.require("ISavingsContractV2")
+const SaveWrapper = artifacts.require("SaveWrapper")
 
 /// Deployed-addresses
-const SAVINGS_CONTRACT_V2 = contractAddressList["Polygon Mainnet"]["SavingsContractV2"]
+const SAVING_WRAPPER = contractAddressList["Polygon Mainnet"]["mAsset Save Wrapper"]
 
 /**
  * @notice - This is the test of YieldFarmingStrategy.sol
@@ -28,10 +28,11 @@ contract("YieldFarmingStrategy", function(accounts) {
     let user3 = accounts[3]
 
     /// Global contract instance
-    let autonomousDegenVC
+    let yieldFarmingStrategy
+    let saveWrapper;
 
     /// Global variable for each contract addresses
-    let AUTONOMOUS_DEGEN_VC
+    let YIELD_FARMING_STRATEGY
 
 
     function toWei(amount) {
@@ -72,8 +73,8 @@ contract("YieldFarmingStrategy", function(accounts) {
         //     AUTONOMOUS_DEGEN_VC = autonomousDegenVC.address
         // })
 
-        it("Create the ICurveGauge contract instance", async () => {
-            curveGauge = await ICurveGauge.at(CURVE_GAUGE)
+        it("Create the SaveWrapper contract instance", async () => {
+            saveWrapper = await SaveWrapper.at(SAVING_WRAPPER)
         })
 
         it("[Log]: Deployer-contract addresses", async () => {
