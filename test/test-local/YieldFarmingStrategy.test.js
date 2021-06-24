@@ -12,6 +12,7 @@ const tokenAddressList = require("../../migrations/addressesList/tokenAddress/to
 /// Artifact of smart contracts 
 const YieldFarmingStrategy = artifacts.require("YieldFarmingStrategy")
 const SaveWrapper = artifacts.require("SaveWrapper")
+const SavingsContract = artifacts.require("SavingsContract")
 
 /// Deployed-addresses
 const SAVING_WRAPPER = contractAddressList["Polygon Mainnet"]["mAsset Save Wrapper"]
@@ -36,6 +37,8 @@ contract("YieldFarmingStrategy", function(accounts) {
 
     /// Global variable for each contract addresses
     let YIELD_FARMING_STRATEGY
+    let SAVE_WRAPPER
+    let SAVINGS_CONTRACT
 
 
     function toWei(amount) {
@@ -71,6 +74,12 @@ contract("YieldFarmingStrategy", function(accounts) {
     })
 
     describe("\n Setup smart-contracts", () => {
+        it("Deploy the SavingsContract", async () => {
+            const underlying = "0x0f7a5734f208A356AB2e5Cf3d02129c17028F3cf"  /// [Todo]: Replace this test address
+            savingsContract = await SavingsContract.new(NEXUS, underlying, { from: deployer })
+            SAVINGS_CONTRACT = savingsContract.address
+        })
+
         // it("Deploy the AutonomousDegenVC contract instance", async () => {
         //     autonomousDegenVC = await AutonomousDegenVC.new(LP_DGVC_ETH, UNISWAP_V2_ROUTER_02, UNISWAP_V2_FACTORY, WETH, { from: deployer })
         //     AUTONOMOUS_DEGEN_VC = autonomousDegenVC.address
@@ -81,7 +90,7 @@ contract("YieldFarmingStrategy", function(accounts) {
         })
 
         it("[Log]: Deployer-contract addresses", async () => {
-            console.log('\n=== CURVE_GAUGE ===', CURVE_GAUGE)
+            //console.log('\n=== CURVE_GAUGE ===', CURVE_GAUGE)
         })
     })
 
@@ -95,16 +104,16 @@ contract("YieldFarmingStrategy", function(accounts) {
             // * @param _amount       Amount of bAsset to mint with
             // * @param _minOut       Min amount of mAsset to get back
             // * @param _stake        Add the imAsset to the Boosted Savings Vault?
-            
-            const _mAsset = MUSD         /// mUSD
-            const _save
-            const _vault
-            const _bAsset = DAI_ADDRESS  /// Underlying assets
-            const _amount = toWei("10")
-            const _minOut = toWei("0")
-            const _stake = true
+            // 
+            const mAsset = MUSD  /// mUSD
+            const save = SAVINGS_CONTRACT
+            const vault = "0x26A09Ae0a531495461757610D95a8c680A7aFE8F"   /// [Todo]: Replace this test address
+            const bAsset = "0x0f7a5734f208A356AB2e5Cf3d02129c17028F3cf"  /// [Todo]: Replace this test address 
+            const amount = toWei("10")
+            const minOut = toWei("0")
+            const stake = true
 
-            let txReceipt = await saveWrapper.saveViaMint(name, symbol, initialSupply, { from: deployer })
+            let txReceipt = await saveWrapper.saveViaMint(mAsset, save, vault, bAsset, amount, minOut, stake, { from: deployer })
 
             // let event = await getEvents(projectTokenFactory, "ProjectTokenCreated")
             // PROJECT_TOKEN = event._projectToken
