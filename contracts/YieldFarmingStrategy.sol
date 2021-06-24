@@ -8,7 +8,7 @@ import { ILendingPool } from './aave-v2/interfaces/ILendingPool.sol';
 import { ILendingPoolAddressesProvider } from './aave-v2/interfaces/ILendingPoolAddressesProvider.sol';
 
 // mStable
-import { ISavingsContractV1, ISavingsContractV2 } from "./mstable/interfaces/ISavingsContract.sol";
+import { SaveWrapper } from "./mstable/savings/peripheral/SaveWrapper.sol";
 
 /**
  * @title YieldFarmingStrategy contract
@@ -18,15 +18,15 @@ contract YieldFarmingStrategy {
     IERC20 public dai;
     ILendingPoolAddressesProvider public provider;
     ILendingPool public lendingPool;
-    ISavingsContractV2 public savingsV2;
+    SaveWrapper public saveWrapper;
 
     address DAI_ADDRESS;
 
-    constructor(ILendingPoolAddressesProvider _provider, ILendingPool _lendingPool, ISavingsContractV2 _savingsV2, IERC20 _dai) public {
+    constructor(ILendingPoolAddressesProvider _provider, ILendingPool _lendingPool, SaveWrapper _saveWrapper, IERC20 _dai) public {
         dai = _dai;
         provider = _provider;
         lendingPool = ILendingPool(provider.getLendingPool());
-        savingsV2 = _savingsV2;
+        saveWrapper = _saveWrapper;
 
         DAI_ADDRESS = address(dai);
     }
@@ -80,15 +80,31 @@ contract YieldFarmingStrategy {
 
     /**
      * @notice - Save ERC20 token into the mStable Vault
-     * @dev Deposit the senders savings to the vault, and credit them internally with "credits".
-     *      Credit amount is calculated as a ratio of deposit amount and exchange rate:
-     *                    credits = underlying / exchangeRate
-     *      We will first update the internal exchange rate by collecting any interest generated on the underlying.
-     * @param underlying      Units of underlying to deposit into savings vault
-     * @return creditsIssued   Units of credits (imUSD) issued
+     * @dev 1. Mints an mAsset and then deposits to Save/Savings Vault
+     * @param _mAsset       mAsset address
+     * @param _bAsset       bAsset address
+     * @param _save         Save address
+     * @param _vault        Boosted Savings Vault address
+     * @param _amount       Amount of bAsset to mint with
+     * @param _minOut       Min amount of mAsset to get back
+     * @param _stake        Add the imAsset to the Boosted Savings Vault?
      */ 
-    function saveIntoMStable(uint256 underlying) public returns (bool) {
-        savingsV2.depositSavings(underlying);
+    function saveIntoMStable(
+        address _mAsset,
+        address _save,
+        address _vault,
+        address _bAsset,
+        uint256 _amount,
+        uint256 _minOut,
+        bool _stake
+    ) public returns (bool) {
+        saveWrapper.saveViaMint(_mAsset,
+                                _save,
+                                _vault,
+                                _bAsset,
+                                _amount,
+                                _minOut,
+                                _stake);
     }
 
 }
