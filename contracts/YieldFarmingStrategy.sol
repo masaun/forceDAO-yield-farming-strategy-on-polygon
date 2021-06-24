@@ -8,7 +8,7 @@ import { ILendingPool } from './aave-v2/interfaces/ILendingPool.sol';
 import { ILendingPoolAddressesProvider } from './aave-v2/interfaces/ILendingPoolAddressesProvider.sol';
 
 // mStable
-import { ISavingsContractV1, ISavingsContractV2 } from "./mstable/interfaces/ISavingsContract.sol";
+import { SaveWrapper } from "./mstable/savings/peripheral/SaveWrapper.sol";
 
 /**
  * @title YieldFarmingStrategy contract
@@ -18,15 +18,15 @@ contract YieldFarmingStrategy {
     IERC20 public dai;
     ILendingPoolAddressesProvider public provider;
     ILendingPool public lendingPool;
-    ISavingsContractV2 public savingsV2;
+    SaveWrapper public saveWrapper;
 
     address DAI_ADDRESS;
 
-    constructor(ILendingPoolAddressesProvider _provider, ILendingPool _lendingPool, ISavingsContractV2 _savingsV2, IERC20 _dai) public {
+    constructor(ILendingPoolAddressesProvider _provider, ILendingPool _lendingPool, SaveWrapper _saveWrapper, IERC20 _dai) public {
         dai = _dai;
         provider = _provider;
         lendingPool = ILendingPool(provider.getLendingPool());
-        savingsV2 = _savingsV2;
+        saveWrapper = _saveWrapper;
 
         DAI_ADDRESS = address(dai);
     }
