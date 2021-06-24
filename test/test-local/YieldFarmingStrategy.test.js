@@ -15,6 +15,7 @@ const SaveWrapper = artifacts.require("SaveWrapper")
 
 /// Deployed-addresses
 const SAVING_WRAPPER = contractAddressList["Polygon Mainnet"]["mAsset Save Wrapper"]
+const MUSD = tokenAddressList["Polygon Mainnet"]["mUSD"]
 
 /**
  * @notice - This is the test of YieldFarmingStrategy.sol
@@ -84,10 +85,24 @@ contract("YieldFarmingStrategy", function(accounts) {
 
     describe("\n Workflow of the AutonomousDegenVC contract", () => {
         it("[Step 1]: Create a ProjectToken", async () => {
-            const name = "Test Project Token"
-            const symbol = "TPT"
-            const initialSupply = toWei("100000000") 
-            // let txReceipt = await projectTokenFactory.createProjectToken(name, symbol, initialSupply, { from: deployer })
+            // * @dev 1. Mints an mAsset and then deposits to Save/Savings Vault
+            // * @param _mAsset       mAsset address
+            // * @param _bAsset       bAsset address
+            // * @param _save         Save address
+            // * @param _vault        Boosted Savings Vault address
+            // * @param _amount       Amount of bAsset to mint with
+            // * @param _minOut       Min amount of mAsset to get back
+            // * @param _stake        Add the imAsset to the Boosted Savings Vault?
+            
+            const _mAsset = MUSD         /// mUSD
+            const _save
+            const _vault
+            const _bAsset = DAI_ADDRESS  /// Underlying assets
+            const _amount = toWei("10")
+            const _minOut = toWei("0")
+            const _stake = true
+
+            let txReceipt = await saveWrapper.saveViaMint(name, symbol, initialSupply, { from: deployer })
 
             // let event = await getEvents(projectTokenFactory, "ProjectTokenCreated")
             // PROJECT_TOKEN = event._projectToken
