@@ -78,4 +78,11 @@ contract YieldFarmingStrategy {
         lendingPool.borrow(asset, amount, interestRateMode, referralCode, onBehalfOf);
     }
 
+    /**
+     * @notice - Save ERC20 token into the mStable Vault
+     */
+    function saveIntoMStable(uint256 amount) public returns (bool) {
+        savingsV2.depositSavings(amount);
+    }
+
 }
