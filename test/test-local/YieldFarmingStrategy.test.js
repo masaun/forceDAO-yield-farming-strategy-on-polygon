@@ -108,7 +108,7 @@ contract("YieldFarmingStrategy", function(accounts) {
             // * @param _mAsset       mAsset address
             // * @param _bAsset       bAsset address
             // * @param _save         Save address
-            // * @param _vault        Boosted Savings Vault address
+            // * @param _vault        Boosted Savings Vault address (<--This is only deployed on Mainnet)
             // * @param _amount       Amount of bAsset to mint with
             // * @param _minOut       Min amount of mAsset to get back
             // * @param _stake        Add the imAsset to the Boosted Savings Vault?
