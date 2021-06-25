@@ -13,6 +13,7 @@ const tokenAddressList = require("../../migrations/addressesList/tokenAddress/to
 const YieldFarmingStrategy = artifacts.require("YieldFarmingStrategy")
 const SaveWrapper = artifacts.require("SaveWrapper")
 const SavingsContract = artifacts.require("SavingsContract")
+const DAIMockToken = artifacts.require("DAIMockToken")
 
 /// Deployed-addresses
 const SAVING_WRAPPER = contractAddressList["Polygon Mainnet"]["mAsset Save Wrapper"]
@@ -33,13 +34,15 @@ contract("YieldFarmingStrategy", function(accounts) {
 
     /// Global contract instance
     let yieldFarmingStrategy
-    let saveWrapper;
+    let saveWrapper
+    let savingsContract
+    let daiToken
 
     /// Global variable for each contract addresses
     let YIELD_FARMING_STRATEGY
     let SAVE_WRAPPER
     let SAVINGS_CONTRACT
-
+    let DAI_TOKEN
 
     function toWei(amount) {
         return web3.utils.toWei(`${ amount }`, 'ether')
@@ -74,6 +77,11 @@ contract("YieldFarmingStrategy", function(accounts) {
     })
 
     describe("\n Setup smart-contracts", () => {
+        it("Deploy the DAI Mock Token", async () => {
+            daiToken = await DAIMockToken.new({ from: deployer })
+            DAI_TOKEN = daiToken.address
+        })
+
         it("Deploy the SavingsContract", async () => {
             const underlying = "0x0f7a5734f208A356AB2e5Cf3d02129c17028F3cf"  /// [Todo]: Replace this test address
             savingsContract = await SavingsContract.new(NEXUS, underlying, { from: deployer })
@@ -108,7 +116,7 @@ contract("YieldFarmingStrategy", function(accounts) {
             const mAsset = MUSD  /// mUSD
             const save = SAVINGS_CONTRACT
             const vault = "0x26A09Ae0a531495461757610D95a8c680A7aFE8F"   /// [Todo]: Replace this test address
-            const bAsset = "0x0f7a5734f208A356AB2e5Cf3d02129c17028F3cf"  /// [Todo]: Replace this test address 
+            const bAsset = DAI_TOKEN   /// DAI Mock Token (as a underlying asset)
             const amount = toWei("10")
             const minOut = toWei("0")
             const stake = true
