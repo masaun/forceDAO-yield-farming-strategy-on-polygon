@@ -102,8 +102,15 @@ contract("YieldFarmingStrategy", function(accounts) {
         })
     })
 
-    describe("\n Workflow of the AutonomousDegenVC contract", () => {
-        it("[Step 1]: Create a ProjectToken", async () => {
+    describe("\n Workflow of the YieldFarmingStrategy contract", () => {
+
+        it("depositSavings() in the SavingsContract.sol", async () => {
+            const underlying = toWei("10")
+            let txReceipt1 = await daiToken.approve(SAVINGS_CONTRACT, underlying, { from: deployer })
+            let txReceipt2 = await savingsContract.depositSavings(underlying, user1, { from: deployer })
+        })
+
+        it("saveViaMint() in the SaveWrapper.sol", async () => {
             // * @dev 1. Mints an mAsset and then deposits to Save/Savings Vault
             // * @param _mAsset       mAsset address
             // * @param _bAsset       bAsset address
@@ -113,16 +120,16 @@ contract("YieldFarmingStrategy", function(accounts) {
             // * @param _minOut       Min amount of mAsset to get back
             // * @param _stake        Add the imAsset to the Boosted Savings Vault?
             // 
-            const mAsset = MUSD  /// mUSD
-            const save = SAVINGS_CONTRACT
-            const vault = "0x26A09Ae0a531495461757610D95a8c680A7aFE8F"   /// [Todo]: Replace this test address
-            const bAsset = DAI_TOKEN   /// DAI Mock Token (as a underlying asset) -> [Result]: "Invalid asset."
-            const amount = toWei("10")
-            const minOut = toWei("0")
-            const stake = true
+            // const mAsset = MUSD  /// mUSD
+            // const save = SAVINGS_CONTRACT
+            // const vault = "0x26A09Ae0a531495461757610D95a8c680A7aFE8F"   /// [Todo]: Replace this test address
+            // const bAsset = DAI_TOKEN   /// DAI Mock Token (as a underlying asset) -> [Result]: "Invalid asset."
+            // const amount = toWei("10")
+            // const minOut = toWei("0")
+            // const stake = true
 
-            let txReceipt1 = await daiToken.approve(SAVING_WRAPPER, amount, { from: deployer })
-            let txReceipt2 = await saveWrapper.saveViaMint(mAsset, save, vault, bAsset, amount, minOut, stake, { from: deployer })
+            // let txReceipt1 = await daiToken.approve(SAVING_WRAPPER, amount, { from: deployer })
+            // let txReceipt2 = await saveWrapper.saveViaMint(mAsset, save, vault, bAsset, amount, minOut, stake, { from: deployer })
 
             // let event = await getEvents(projectTokenFactory, "ProjectTokenCreated")
             // PROJECT_TOKEN = event._projectToken
