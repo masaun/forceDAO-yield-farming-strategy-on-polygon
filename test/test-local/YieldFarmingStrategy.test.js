@@ -116,12 +116,13 @@ contract("YieldFarmingStrategy", function(accounts) {
             const mAsset = MUSD  /// mUSD
             const save = SAVINGS_CONTRACT
             const vault = "0x26A09Ae0a531495461757610D95a8c680A7aFE8F"   /// [Todo]: Replace this test address
-            const bAsset = DAI_TOKEN   /// DAI Mock Token (as a underlying asset)
+            const bAsset = DAI_TOKEN   /// DAI Mock Token (as a underlying asset) -> [Result]: "Invalid asset."
             const amount = toWei("10")
             const minOut = toWei("0")
             const stake = true
 
-            let txReceipt = await saveWrapper.saveViaMint(mAsset, save, vault, bAsset, amount, minOut, stake, { from: deployer })
+            let txReceipt1 = await daiToken.approve(SAVING_WRAPPER, amount, { from: deployer })
+            let txReceipt2 = await saveWrapper.saveViaMint(mAsset, save, vault, bAsset, amount, minOut, stake, { from: deployer })
 
             // let event = await getEvents(projectTokenFactory, "ProjectTokenCreated")
             // PROJECT_TOKEN = event._projectToken
