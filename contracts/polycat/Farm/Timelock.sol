@@ -9,12 +9,10 @@
 // Ctrl+f for XXX to see all the modifications.
 
 // SPDX-License-Identifier: MIT
-
-// XXX: pragma solidity ^0.5.16;
 pragma solidity 0.6.12;
 
 // XXX: import "./SafeMath.sol";
-import "https://github.com/OpenZeppelin/openzeppelin-contracts/blob/release-v3.1.0/contracts/math/SafeMath.sol";
+import "@openzeppelin/contracts/math/SafeMath.sol";
 
 contract Timelock {
     using SafeMath for uint;
