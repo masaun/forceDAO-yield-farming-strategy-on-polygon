@@ -7,7 +7,7 @@
   },
   "scripts": {
     "test": "truffle test ./test/test-local/* --network local",
-    "test:Something": "truffle test ./test/test-local/Something.test.js --network local",
+    "test:YieldFarmingStrategy": "truffle test ./test/test-local/YieldFarmingStrategy.test.js --network local",
     "compile:local": "truffle compile --reset --network local",
     "migrate:local": "truffle migrate --reset --network local"
   },

@@ -55,9 +55,9 @@ $ ganache-cli -d --fork https://polygon-mainnet.infura.io/v3/{YOUR INFURA KEY}@{
 
 - 2: Execute test of the smart-contracts
 ```
-npm run test:Something
+npm run test:YieldFarmingStrategy
 ```
-( `truffle test ./test/test-local/Something.test.js --network local` )  
+( `truffle test ./test/test-local/YieldFarmingStrategy.test.js --network local` )  
 
 
 <br>
