@@ -20,6 +20,7 @@ const DAIMockToken = artifacts.require("DAIMockToken")
 /**
  * @notice - This is the test of MasterChef.sol
  * @notice - [Execution command]: $ truffle test ./test/test-local/MasterChef.test.js --network local
+ * @notice - [Note]: When you execute this test, you need to execute "ganache-cli -d" in advance
  */
 contract("MasterChef", function(accounts) {
     /// Acccounts
@@ -107,42 +108,38 @@ contract("MasterChef", function(accounts) {
             let txReceipt = fishToken.mint(to, amount, { from: deployer })
         })
 
-        it("Mint 1000 DAI to user1", async () => {
+        it("Transfer 1000 DAI from deployer to user1", async () => {
             const to = user1
             const amount = toWei("1000")  /// 1000 $DAI
-            let txReceipt = daiToken.mint(to, amount, { from: deployer })
+            let txReceipt = daiToken.transfer(to, amount, { from: deployer })
         })
     })
 
     describe("\n Workflow of the MasterChef contract", () => {
-
-        it("deposit()", async () => {
-            /// [Todo]:
-        })
 
         ///---------------------------------------------------
         /// @notice - Reference from my "NFT-yield-farming" repo
         ///           ( https://github.com/masaun/NFT-yield-farming/blob/ethereum_master_20210217/test/test-local/NFTYieldFarming.test.js )
         ///---------------------------------------------------
 
-        it("Add a new ERC20 Token (DAI) Pool as a target", async () => {
+        it("add() - Add a new ERC20 Token (DAI) Pool as a target", async () => {
             const allocPoint = "100"
-            const lpToken = DAI_TOKEN   /// Using ERC20 Token (DAI) as a single staking pool
-            const depositFeeBP = 4      /// Deposit Fee == 4%
+            const lpToken = DAI_TOKEN   /// [Note]: Using ERC20 Token (DAI) as a single staking pool
+            const depositFeeBP = 4      /// [Note]: Deposit Fee == 4%
             let txReceipt = await masterChef.add(allocPoint, lpToken, depositFeeBP, { from: deployer })
         })
 
-        it("User1 stake 10 LP tokens at block 310", async () => {
+        it("deposit() - User1 stake 10 DAI at block 310", async () => {
             /// [Note]: Block to mint the GovernanceToken start from block 300.
             /// User1 stake (deposit) 10 LP tokens at block 310.
             await time.advanceBlockTo("309")
 
-            const _nftPoolId = 0
-            //const _stakeAmount = "10"  /// 10 LP Token
-            const _stakeAmount = web3.utils.toWei('10', 'ether')  /// 10 LP Token
+            const poolId = 0
+            const stakeAmount = toWei('10')  /// 10 DAI
+            const referrer = user1
 
-            let txReceipt1 = await lpToken.approve(NFT_YIELD_FARMING, _stakeAmount, { from: user1 })
-            let txReceipt2 = await nftYieldFarming.deposit(_nftPoolId, _stakeAmount, { from: user1 })
+            let txReceipt1 = await daiToken.approve(MASTER_CHEF, stakeAmount, { from: user1 })
+            let txReceipt2 = await masterChef.deposit(poolId, stakeAmount, referrer, { from: user1 })
         })
 
         it("User2 stake 20 LP tokens at block 314", async () => {
