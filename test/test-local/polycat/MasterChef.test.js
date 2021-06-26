@@ -106,6 +106,12 @@ contract("MasterChef", function(accounts) {
             const amount = toWei("1000")  /// 1000 $FISH
             let txReceipt = fishToken.mint(to, amount, { from: deployer })
         })
+
+        it("Mint 1000 DAI to user1", async () => {
+            const to = user1
+            const amount = toWei("1000")  /// 1000 $DAI
+            let txReceipt = daiToken.mint(to, amount, { from: deployer })
+        })
     })
 
     describe("\n Workflow of the MasterChef contract", () => {
@@ -119,12 +125,11 @@ contract("MasterChef", function(accounts) {
         ///           ( https://github.com/masaun/NFT-yield-farming/blob/ethereum_master_20210217/test/test-local/NFTYieldFarming.test.js )
         ///---------------------------------------------------
 
-        it("Add a new NFT Pool as a target", async () => {
-            const _nftToken = NFT_TOKEN  /// NFT token as a target to stake
-            const _lpToken = LP_TOKEN    /// LP token to be staked
-            const _allocPoint = "100"
-            const _withUpdate = true    
-            let txReceipt = await nftYieldFarming.addNFTPool(_nftToken, _lpToken, _allocPoint, _withUpdate, { from: deployer })
+        it("Add a new ERC20 Token (DAI) Pool as a target", async () => {
+            const allocPoint = "100"
+            const lpToken = DAI_TOKEN   /// Using ERC20 Token (DAI) as a single staking pool
+            const depositFeeBP = 4      /// Deposit Fee == 4%
+            let txReceipt = await masterChef.add(allocPoint, lpToken, depositFeeBP, { from: deployer })
         })
 
         it("User1 stake 10 LP tokens at block 310", async () => {
