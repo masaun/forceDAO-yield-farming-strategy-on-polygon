@@ -25,6 +25,7 @@ const DAIMockToken = artifacts.require("DAIMockToken")
 contract("MasterChef", function(accounts) {
     /// Acccounts
     let deployer = accounts[0]
+    let admin = accounts[0]
     let user1 = accounts[1]
     let user2 = accounts[2]
     let user3 = accounts[3]
@@ -108,10 +109,11 @@ contract("MasterChef", function(accounts) {
             let txReceipt = fishToken.mint(to, amount, { from: deployer })
         })
 
-        it("Transfer 1000 DAI from deployer to user1", async () => {
-            const to = user1
+        it("Transfer 1000 DAI from deployer to 3 users (user1, user2, user3)", async () => {
             const amount = toWei("1000")  /// 1000 $DAI
-            let txReceipt = daiToken.transfer(to, amount, { from: deployer })
+            let txReceipt1 = daiToken.transfer(user1, amount, { from: deployer })
+            let txReceipt2 = daiToken.transfer(user2, amount, { from: deployer })
+            let txReceipt3 = daiToken.transfer(user3, amount, { from: deployer })
         })
     })
 
@@ -130,8 +132,8 @@ contract("MasterChef", function(accounts) {
         })
 
         it("deposit() - User1 stake 10 DAI at block 310", async () => {
-            /// [Note]: Block to mint the GovernanceToken start from block 300.
-            /// User1 stake (deposit) 10 LP tokens at block 310.
+            /// [Note]: Block to mint the FishToken start from block 300.
+            /// User1 stake (deposit) 10 DAI tokens at block 310.
             await time.advanceBlockTo("309")
 
             const poolId = 0
@@ -142,43 +144,43 @@ contract("MasterChef", function(accounts) {
             let txReceipt2 = await masterChef.deposit(poolId, stakeAmount, referrer, { from: user1 })
         })
 
-        it("User2 stake 20 LP tokens at block 314", async () => {
-            /// [Note]: Block to mint the GovernanceToken start from block 300.
-            /// User2 stake (deposit) 20 LP tokens at block 314.
+        it("deposit() - User2 stake 20 DAI at block 314", async () => {
+            /// [Note]: Block to mint the FishToken start from block 300.
+            /// User2 stake (deposit) 20 DAI at block 314.
             await time.advanceBlockTo("313")
 
-            const _nftPoolId = 0
-            //const _stakeAmount = "20"  /// 20 LP Token
-            const _stakeAmount = web3.utils.toWei('20', 'ether')  /// 20 LP Token
+            const poolId = 0
+            const stakeAmount = toWei('20')  /// 20 DAI
+            const referrer = user2
 
-            let txReceipt1 = await lpToken.approve(NFT_YIELD_FARMING, _stakeAmount, { from: user2 })
-            let txReceipt2 = await nftYieldFarming.deposit(_nftPoolId, _stakeAmount, { from: user2 })
+            let txReceipt1 = await daiToken.approve(MASTER_CHEF, stakeAmount, { from: user2 })
+            let txReceipt2 = await masterChef.deposit(poolId, stakeAmount, referrer, { from: user2 })
         })
 
-        it("User3 stake 30 LP tokens at block 318", async () => {
-            /// [Note]: Block to mint the GovernanceToken start from block 300.
-            /// User3 stake (deposit) 30 LPs at block 318
+        it("User3 stake 30 DAI at block 318", async () => {
+            /// [Note]: Block to mint the FishToken start from block 300.
+            /// User3 stake (deposit) 30 DAI at block 318
             await time.advanceBlockTo("317")
 
-            const _nftPoolId = 0
-            //const _stakeAmount = "30"  /// 30 LP Token
-            const _stakeAmount = web3.utils.toWei('30', 'ether')  /// 30 LP Token
+            const poolId = 0
+            const stakeAmount = toWei('30')  /// 30 DAI
+            const referrer = user3
 
-            let txReceipt1 = await lpToken.approve(NFT_YIELD_FARMING, _stakeAmount, { from: user3 })
-            let txReceipt2 = await nftYieldFarming.deposit(_nftPoolId, _stakeAmount, { from: user3 })
+            let txReceipt1 = await daiToken.approve(MASTER_CHEF, stakeAmount, { from: user3 })
+            let txReceipt2 = await masterChef.deposit(poolId, stakeAmount, referrer, { from: user3 })
         })
 
-        it("User1 stake more 10 LP tokens at block 320", async () => {
-            /// [Note]: Block to mint the GovernanceToken start from block 300.
-            /// User1 stake (deposit) 10 more LP tokens at block 320.
+        it("User1 stake more 10 DAI at block 320", async () => {
+            /// [Note]: Block to mint the FishToken start from block 300.
+            /// User1 stake (deposit) 10 more DAI at block 320.
             await time.advanceBlockTo("319")
 
-            const _nftPoolId = 0
-            //const _stakeAmount = "10"  /// 10 LP Token
-            const _stakeAmount = web3.utils.toWei('10', 'ether')  /// 10 LP Token
+            const poolId = 0
+            const stakeAmount = toWei('10')  /// 10 DAI
+            const referrer = user1
 
-            let txReceipt1 = await lpToken.approve(NFT_YIELD_FARMING, _stakeAmount, { from: user1 })
-            let txReceipt2 = await nftYieldFarming.deposit(_nftPoolId, _stakeAmount, { from: user1 })
+            let txReceipt1 = await daiToken.approve(MASTER_CHEF, stakeAmount, { from: user1 })
+            let txReceipt2 = await masterChef.deposit(poolId, stakeAmount, referrer, { from: user1 })
         })
 
 
@@ -193,61 +195,60 @@ contract("MasterChef", function(accounts) {
             )
         })
 
-        it("Total Supply of the GovernanceToken should be 11000 (at block 321)", async () => {
+        it("Total Supply of the FishToken should be 11000 (at block 321)", async () => {
             ///  At this point (At block 321): 
-            ///      TotalSupply of GovernanceToken: 1000 * (321 - 310) = 11000
+            ///      TotalSupply of FishToken: 1000 * (321 - 310) = 11000
             ///      User1 should have: 4*1000 + 4*1/3*1000 + 2*1/6*1000 = 5666
             ///      NFTYieldFarming contract should have the remaining: 10000 - 5666 = 4334
-            let totalSupplyOfGovernanceToken = await governanceToken.totalSupply()
-            console.log('=== totalSupplyOfGovernanceToken ===', String(totalSupplyOfGovernanceToken))
+            let totalSupplyOfFishToken = await fishToken.totalSupply()
+            console.log('=== totalSupplyOfFishToken ===', String(totalSupplyOfFishToken))
             assert.equal(
-                Math.round(web3.utils.fromWei(totalSupplyOfGovernanceToken, 'ether')),
+                Math.round(web3.utils.fromWei(totalSupplyOfFishToken, 'ether')),
                 11000,  /// [Note]: This is amount value rounded.
                 "Total supply of the Governance tokens (at block 321) should be 11000"
             )
         })
 
-        it("GovernanceToken balance of user1 should be 5667 (at block 321)", async () => {
-            let governanceTokenBalanceOfUser1 = await governanceToken.balanceOf(user1, { from: user1 })
-            console.log('=== GovernanceToken balance of user1 ===', String(governanceTokenBalanceOfUser1))
+        it("FishToken balance of user1 should be 5667 (at block 321)", async () => {
+            let fishTokenBalanceOfUser1 = await fishToken.balanceOf(user1, { from: user1 })
+            console.log('=== FishToken balance of user1 ===', String(fishTokenBalanceOfUser1))
             assert.equal(
-                Math.round(web3.utils.fromWei(governanceTokenBalanceOfUser1, 'ether')),
+                Math.round(web3.utils.fromWei(fishTokenBalanceOfUser1, 'ether')),
                 5667,  /// [Note]: This is amount value rounded.
-                "GovernanceToken balance of user1 should be 5667 (at block 321)"
+                "FishToken balance of user1 should be 5667 (at block 321)"
             )
         })
 
-        it("GovernanceToken balance of user2, user3, admin (at block 321)", async () => {
-            let governanceTokenBalanceOfUser2 = await governanceToken.balanceOf(user2, { from: user2 })
-            console.log('=== GovernanceToken balance of user2 ===', String(governanceTokenBalanceOfUser2))
+        it("FishToken balance of user2, user3, admin (at block 321)", async () => {
+            let fishTokenBalanceOfUser2 = await fishToken.balanceOf(user2, { from: user2 })
+            console.log('=== FishToken balance of user2 ===', String(fishTokenBalanceOfUser2))
 
-            let governanceTokenBalanceOfUser3 = await governanceToken.balanceOf(user3, { from: user3 })
-            console.log('=== GovernanceToken balance of user3 ===', String(governanceTokenBalanceOfUser3))
+            let fishTokenBalanceOfUser3 = await fishToken.balanceOf(user3, { from: user3 })
+            console.log('=== FishToken balance of user3 ===', String(fishTokenBalanceOfUser3))
 
-            let governanceTokenBalanceOfAdmin = await governanceToken.balanceOf(admin, { from: user3 })
-            console.log('=== GovernanceToken balance of admin ===', String(governanceTokenBalanceOfAdmin))
+            let fishTokenBalanceOfAdmin = await fishToken.balanceOf(admin, { from: user3 })
+            console.log('=== FishToken balance of admin ===', String(fishTokenBalanceOfAdmin))
         })
 
-        it("GovernanceToken balance of the NFTYieldFarming contract should be 4333 (at block 321)", async () => {
-            let governanceTokenBalance = await governanceToken.balanceOf(NFT_YIELD_FARMING, { from: user1 })
-            console.log('=== GovernanceToken balance of the NFTYieldFarming contract ===', String(governanceTokenBalance))
+        it("FishToken balance of the NFTYieldFarming contract should be 4333 (at block 321)", async () => {
+            let fishTokenBalance = await fishToken.balanceOf(MASTER_CHEF, { from: user1 })
+            console.log('=== FishToken balance of the NFTYieldFarming contract ===', String(fishTokenBalance))
             assert.equal(
-                Math.round(web3.utils.fromWei(governanceTokenBalance, 'ether')),
+                Math.round(web3.utils.fromWei(fishTokenBalance, 'ether')),
                 4333,  /// [Note]: This is amount value rounded.
-                "GovernanceToken balance of the NFTYieldFarming contract should be 4333 (at block 321)"
+                "FishToken balance of the NFTYieldFarming contract should be 4333 (at block 321)"
             )
         })
 
-        it("Un-stake and withdraw 10 LP tokens and receive 5952 GovernanceToken as rewards (at block 322)", async () => {
-            /// [Note]: Total LPs amount staked of user1 is 20 LP tokens at block 321.
-            /// [Note]: Therefore, maximum withdraw amount for user1 is 20 LPs
-            const _nftPoolId = 0
-            //const _unStakeAmount = "10"  /// 10 LP Token 
-            const _unStakeAmount = web3.utils.toWei('10', 'ether')  /// 10 LP Token
-            let txReceipt = await nftYieldFarming.withdraw(_nftPoolId, _unStakeAmount, { from: user1 })
+        it("Un-stake and withdraw 10 DAI and receive 5952 FishToken as rewards (at block 322)", async () => {
+            /// [Note]: Total DAI amount staked of user1 is 20 DAI tokens at block 321.
+            /// [Note]: Therefore, maximum withdraw amount for user1 is 20 DAI
+            const poolId = 0
+            const unStakeAmount = toWei('10')  /// 10 DAI
+            let txReceipt = await masterChef.withdraw(poolId, unStakeAmount, { from: user1 })
         
-            let governanceTokenBalanceOfUser1 = await governanceToken.balanceOf(user1, { from: user1 })
-            console.log('=== GovernanceToken balance of user1 ===', String(governanceTokenBalanceOfUser1))
+            let fishTokenBalanceOfUser1 = await fishToken.balanceOf(user1, { from: user1 })
+            console.log('=== FishToken balance of user1 ===', String(fishTokenBalanceOfUser1))
         })
 
 
