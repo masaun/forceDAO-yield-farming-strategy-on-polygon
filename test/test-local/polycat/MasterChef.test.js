@@ -100,6 +100,14 @@ contract("MasterChef", function(accounts) {
         })
     })
 
+    describe("\n Preparation in advance", () => {
+        it("Mint 1000 Fish Tokens to user1", async () => {
+            const to = user1
+            const amount = toWei("1000")  /// 1000 $FISH
+            let txReceipt = fishToken.mint(to, amount, { from: deployer })
+        })
+    })
+
     describe("\n Workflow of the MasterChef contract", () => {
 
         it("deposit()", async () => {
