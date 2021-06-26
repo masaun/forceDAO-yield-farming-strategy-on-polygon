@@ -16,6 +16,9 @@ const DAIMockToken = artifacts.require("DAIMockToken")
 
 /// Deployed-addresses
 
+/// Zero address
+const ZERO_ADDRESS = "0x0000000000000000000000000000000000000000"
+
 
 /**
  * @notice - This is the test of MasterChef.sol
@@ -138,7 +141,7 @@ contract("MasterChef", function(accounts) {
 
             const poolId = 0
             const stakeAmount = toWei('10')  /// 10 DAI
-            const referrer = user1
+            const referrer = ZERO_ADDRESS
 
             let txReceipt1 = await daiToken.approve(MASTER_CHEF, stakeAmount, { from: user1 })
             let txReceipt2 = await masterChef.deposit(poolId, stakeAmount, referrer, { from: user1 })
@@ -151,7 +154,7 @@ contract("MasterChef", function(accounts) {
 
             const poolId = 0
             const stakeAmount = toWei('20')  /// 20 DAI
-            const referrer = user2
+            const referrer = ZERO_ADDRESS
 
             let txReceipt1 = await daiToken.approve(MASTER_CHEF, stakeAmount, { from: user2 })
             let txReceipt2 = await masterChef.deposit(poolId, stakeAmount, referrer, { from: user2 })
@@ -164,7 +167,7 @@ contract("MasterChef", function(accounts) {
 
             const poolId = 0
             const stakeAmount = toWei('30')  /// 30 DAI
-            const referrer = user3
+            const referrer = ZERO_ADDRESS
 
             let txReceipt1 = await daiToken.approve(MASTER_CHEF, stakeAmount, { from: user3 })
             let txReceipt2 = await masterChef.deposit(poolId, stakeAmount, referrer, { from: user3 })
@@ -177,7 +180,7 @@ contract("MasterChef", function(accounts) {
 
             const poolId = 0
             const stakeAmount = toWei('10')  /// 10 DAI
-            const referrer = user1
+            const referrer = ZERO_ADDRESS
 
             let txReceipt1 = await daiToken.approve(MASTER_CHEF, stakeAmount, { from: user1 })
             let txReceipt2 = await masterChef.deposit(poolId, stakeAmount, referrer, { from: user1 })
