@@ -119,13 +119,13 @@ contract("MasterChef", function(accounts) {
     })
 
     describe("\n Workflow of the MasterChef contract", () => {
-
-        ///---------------------------------------------------
-        /// @notice - Reference from my "NFT-yield-farming" repo
-        ///           ( https://github.com/masaun/NFT-yield-farming/blob/ethereum_master_20210217/test/test-local/NFTYieldFarming.test.js )
-        ///---------------------------------------------------
+        it("fishPerBlock - FISH tokens created per block should be 1 $FISH", async () => {
+            let FISH_PER_BLOCK = await masterChef.fishPerBlock()
+            console.log('=== fishPerBlock ===', fromWei(FISH_PER_BLOCK))
+        })
 
         it("add() - Add a new ERC20 Token (DAI) Pool as a target", async () => {
+            /// [Note]: 1 FISH (1e18) tokens created per block
             const allocPoint = "100"
             const lpToken = DAI_TOKEN   /// [Note]: Using ERC20 Token (DAI) as a single staking pool
             const depositFeeBP = 4      /// [Note]: Deposit Fee == 4%
@@ -196,48 +196,50 @@ contract("MasterChef", function(accounts) {
             )
         })
 
-        it("Total Supply of the FishToken should be 11000 (at block 321)", async () => {
+        it("Total Supply of the FishToken should be 11 (at block 321)", async () => {
+            /// [Note]: 1 FISH (1e18) tokens created per block
+
             ///  At this point (At block 321): 
-            ///      TotalSupply of FishToken: 1000 * (321 - 310) = 11000
-            ///      User1 should have: 4*1000 + 4*1/3*1000 + 2*1/6*1000 = 5666
-            ///      NFTYieldFarming contract should have the remaining: 10000 - 5666 = 4334
+            ///      TotalSupply of FishToken: 1 * (321 - 310) = 11
+            ///      User1 should have: 4*1 + 4*1/3*1 + 2*1/6*1 = 6.666
+            ///      MasterChef contract should have the remaining: 11 - 6.666 = 5.334
             let totalSupplyOfFishToken = await fishToken.totalSupply()
-            console.log('=== totalSupplyOfFishToken ===', String(totalSupplyOfFishToken))
+            console.log('=== totalSupplyOfFishToken ===', fromWei(totalSupplyOfFishToken))
             assert.equal(
                 Math.round(web3.utils.fromWei(totalSupplyOfFishToken, 'ether')),
-                11000,  /// [Note]: This is amount value rounded.
-                "Total supply of the Governance tokens (at block 321) should be 11000"
+                11,  /// [Note]: This is amount value rounded.
+                "Total supply of the Governance tokens (at block 321) should be 11"
             )
         })
 
-        it("FishToken balance of user1 should be 5667 (at block 321)", async () => {
+        it("FishToken balance of user1 should be 7 (at block 321)", async () => {
             let fishTokenBalanceOfUser1 = await fishToken.balanceOf(user1, { from: user1 })
-            console.log('=== FishToken balance of user1 ===', String(fishTokenBalanceOfUser1))
+            console.log('=== FishToken balance of user1 ===', fromWei(fishTokenBalanceOfUser1))
             assert.equal(
                 Math.round(web3.utils.fromWei(fishTokenBalanceOfUser1, 'ether')),
-                5667,  /// [Note]: This is amount value rounded.
-                "FishToken balance of user1 should be 5667 (at block 321)"
+                7,  /// [Note]: This is amount value rounded.
+                "FishToken balance of user1 should be 7 (at block 321)"
             )
         })
 
         it("FishToken balance of user2, user3, admin (at block 321)", async () => {
             let fishTokenBalanceOfUser2 = await fishToken.balanceOf(user2, { from: user2 })
-            console.log('=== FishToken balance of user2 ===', String(fishTokenBalanceOfUser2))
+            console.log('=== FishToken balance of user2 ===', fromWei(fishTokenBalanceOfUser2))
 
             let fishTokenBalanceOfUser3 = await fishToken.balanceOf(user3, { from: user3 })
-            console.log('=== FishToken balance of user3 ===', String(fishTokenBalanceOfUser3))
+            console.log('=== FishToken balance of user3 ===', fromWei(fishTokenBalanceOfUser3))
 
             let fishTokenBalanceOfAdmin = await fishToken.balanceOf(admin, { from: user3 })
-            console.log('=== FishToken balance of admin ===', String(fishTokenBalanceOfAdmin))
+            console.log('=== FishToken balance of admin ===', fromWei(fishTokenBalanceOfAdmin))
         })
 
-        it("FishToken balance of the NFTYieldFarming contract should be 4333 (at block 321)", async () => {
+        it("FishToken balance of the MasterChef contract should be 4 (at block 321)", async () => {
             let fishTokenBalance = await fishToken.balanceOf(MASTER_CHEF, { from: user1 })
-            console.log('=== FishToken balance of the NFTYieldFarming contract ===', String(fishTokenBalance))
+            console.log('=== FishToken balance of the MasterChef contract ===', fromWei(fishTokenBalance))
             assert.equal(
                 Math.round(web3.utils.fromWei(fishTokenBalance, 'ether')),
-                4333,  /// [Note]: This is amount value rounded.
-                "FishToken balance of the NFTYieldFarming contract should be 4333 (at block 321)"
+                4,  /// [Note]: This is amount value rounded.
+                "FishToken balance of the MasterChef contract should be 5 (at block 321)"
             )
         })
 
@@ -249,7 +251,7 @@ contract("MasterChef", function(accounts) {
             let txReceipt = await masterChef.withdraw(poolId, unStakeAmount, { from: user1 })
         
             let fishTokenBalanceOfUser1 = await fishToken.balanceOf(user1, { from: user1 })
-            console.log('=== FishToken balance of user1 ===', String(fishTokenBalanceOfUser1))
+            console.log('=== FishToken balance of user1 ===', fromWei(fishTokenBalanceOfUser1))
         })
 
 
