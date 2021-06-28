@@ -214,7 +214,7 @@ contract("MasterChef", function(accounts) {
 
         it("FishToken balance of user1 should be 7 (at block 321)", async () => {
             let fishTokenBalanceOfUser1 = await fishToken.balanceOf(user1, { from: user1 })
-            console.log('=== FishToken balance of user1 ===', fromWei(fishTokenBalanceOfUser1))
+            console.log('=== FishToken balance of user1 (before it is rounded) ===', fromWei(fishTokenBalanceOfUser1))
             assert.equal(
                 Math.round(web3.utils.fromWei(fishTokenBalanceOfUser1, 'ether')),
                 7,  /// [Note]: This is amount value rounded.
@@ -235,7 +235,7 @@ contract("MasterChef", function(accounts) {
 
         it("FishToken balance of the MasterChef contract should be 4 (at block 321)", async () => {
             let fishTokenBalance = await fishToken.balanceOf(MASTER_CHEF, { from: user1 })
-            console.log('=== FishToken balance of the MasterChef contract ===', fromWei(fishTokenBalance))
+            console.log('=== FishToken balance of the MasterChef contract (before it is rounded) ===', fromWei(fishTokenBalance))
             assert.equal(
                 Math.round(web3.utils.fromWei(fishTokenBalance, 'ether')),
                 4,  /// [Note]: This is amount value rounded.
@@ -243,7 +243,7 @@ contract("MasterChef", function(accounts) {
             )
         })
 
-        it("Un-stake and withdraw 10 DAI and receive 5952 FishToken as rewards (at block 322)", async () => {
+        it("Un-stake and withdraw 10 DAI and receive 7 FishToken as rewards (at block 322)", async () => {
             /// [Note]: Total DAI amount staked of user1 is 20 DAI tokens at block 321.
             /// [Note]: Therefore, maximum withdraw amount for user1 is 20 DAI
             const poolId = 0
@@ -251,7 +251,7 @@ contract("MasterChef", function(accounts) {
             let txReceipt = await masterChef.withdraw(poolId, unStakeAmount, { from: user1 })
         
             let fishTokenBalanceOfUser1 = await fishToken.balanceOf(user1, { from: user1 })
-            console.log('=== FishToken balance of user1 ===', fromWei(fishTokenBalanceOfUser1))
+            console.log('=== FishToken balance of user1 (before it is rounded) ===', fromWei(fishTokenBalanceOfUser1))
         })
 
 
