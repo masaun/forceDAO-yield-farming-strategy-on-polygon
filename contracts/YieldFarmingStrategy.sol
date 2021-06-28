@@ -7,8 +7,8 @@ import { IERC20 } from "@openzeppelin/contracts/token/ERC20/IERC20.sol";
 import { ILendingPool } from './aave-v2/interfaces/ILendingPool.sol';
 import { ILendingPoolAddressesProvider } from './aave-v2/interfaces/ILendingPoolAddressesProvider.sol';
 
-// mStable
-import { SaveWrapper } from "./mstable/savings/peripheral/SaveWrapper.sol";
+// Polycat.finanace
+import { MasterChef } from "./polycat/Farm/MasterChef.sol";
 
 /**
  * @title YieldFarmingStrategy contract
@@ -18,15 +18,15 @@ contract YieldFarmingStrategy {
     IERC20 public dai;
     ILendingPoolAddressesProvider public provider;
     ILendingPool public lendingPool;
-    SaveWrapper public saveWrapper;
+    MasterChef public masterChef;
 
     address DAI_ADDRESS;
 
-    constructor(ILendingPoolAddressesProvider _provider, ILendingPool _lendingPool, SaveWrapper _saveWrapper, IERC20 _dai) public {
+    constructor(ILendingPoolAddressesProvider _provider, ILendingPool _lendingPool, MasterChef _masterChef, IERC20 _dai) public {
         dai = _dai;
         provider = _provider;
         lendingPool = ILendingPool(provider.getLendingPool());
-        saveWrapper = _saveWrapper;
+        masterChef = _masterChef;
 
         DAI_ADDRESS = address(dai);
     }
@@ -79,32 +79,10 @@ contract YieldFarmingStrategy {
     }
 
     /**
-     * @notice - Save ERC20 token into the mStable Vault
-     * @dev 1. Mints an mAsset and then deposits to Save/Savings Vault
-     * @param _mAsset       mAsset address
-     * @param _bAsset       bAsset address
-     * @param _save         Save address
-     * @param _vault        Boosted Savings Vault address
-     * @param _amount       Amount of bAsset to mint with
-     * @param _minOut       Min amount of mAsset to get back
-     * @param _stake        Add the imAsset to the Boosted Savings Vault?
+     * @notice - Lend (Deposit) ERC20 tokens into the Polycat Pool
      */ 
-    function saveIntoMStable(
-        address _mAsset,
-        address _save,
-        address _vault,
-        address _bAsset,
-        uint256 _amount,
-        uint256 _minOut,
-        bool _stake
-    ) public returns (bool) {
-        saveWrapper.saveViaMint(_mAsset,
-                                _save,
-                                _vault,
-                                _bAsset,
-                                _amount,
-                                _minOut,
-                                _stake);
+    function lendIntoPolycatPool() public returns (bool) {
+        // [Todo]:
     }
 
 }

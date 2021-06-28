@@ -25,4 +25,5 @@ async function getEvents(contractInstance, eventName) {
     return events[0].returnValues
 } 
 
+/// Export methods
 module.exports = { toWei, fromWei, getEvents }

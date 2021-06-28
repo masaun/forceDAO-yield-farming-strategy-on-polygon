@@ -5,23 +5,16 @@ const web3 = new Web3(new Web3.providers.WebsocketProvider('ws://localhost:8545'
 /// Openzeppelin test-helper
 const { time, constants, expectRevert, expectEvent } = require('@openzeppelin/test-helpers')
 
-/// Openzeppelin test-helper
-const { time, constants, expectRevert, expectEvent } = require('@openzeppelin/test-helpers')
-
 /// Import deployed-addresses
 const contractAddressList = require("../../migrations/addressesList/contractAddress/contractAddress.js")
 const tokenAddressList = require("../../migrations/addressesList/tokenAddress/tokenAddress.js")
 
 /// Artifact of smart contracts 
 const YieldFarmingStrategy = artifacts.require("YieldFarmingStrategy")
-const SaveWrapper = artifacts.require("SaveWrapper")
-const SavingsContract = artifacts.require("SavingsContract")
 const DAIMockToken = artifacts.require("DAIMockToken")
 
 /// Deployed-addresses
-const SAVING_WRAPPER = contractAddressList["Polygon Mainnet"]["mAsset Save Wrapper"]
-const NEXUS = contractAddressList["Polygon Mainnet"]["Nexus"]
-const MUSD = tokenAddressList["Polygon Mainnet"]["mUSD"]
+//const SAVING_WRAPPER = contractAddressList["Polygon Mainnet"]["mAsset Save Wrapper"]
 
 
 /**
@@ -37,14 +30,10 @@ contract("YieldFarmingStrategy", function(accounts) {
 
     /// Global contract instance
     let yieldFarmingStrategy
-    let saveWrapper
-    let savingsContract
     let daiToken
 
     /// Global variable for each contract addresses
     let YIELD_FARMING_STRATEGY
-    let SAVE_WRAPPER
-    let SAVINGS_CONTRACT
     let DAI_TOKEN
 
     describe("\n Accounts", () => {
@@ -62,19 +51,9 @@ contract("YieldFarmingStrategy", function(accounts) {
             DAI_TOKEN = daiToken.address
         })
 
-        it("Deploy the SavingsContract", async () => {
-            const underlying = "0x0f7a5734f208A356AB2e5Cf3d02129c17028F3cf"  /// [Todo]: Replace this test address
-            savingsContract = await SavingsContract.new(NEXUS, underlying, { from: deployer })
-            SAVINGS_CONTRACT = savingsContract.address
-        })
-
-        // it("Deploy the AutonomousDegenVC contract instance", async () => {
-        //     autonomousDegenVC = await AutonomousDegenVC.new(LP_DGVC_ETH, UNISWAP_V2_ROUTER_02, UNISWAP_V2_FACTORY, WETH, { from: deployer })
-        //     AUTONOMOUS_DEGEN_VC = autonomousDegenVC.address
-        // })
-
-        it("Create the SaveWrapper contract instance", async () => {
-            saveWrapper = await SaveWrapper.at(SAVING_WRAPPER)
+        it("Deploy the YieldFarmingStrategy contract instance", async () => {
+            yieldFarmingStrategy = await YieldFarmingStrategy.new({ from: deployer })
+            YIELD_FARMING_STRATEGY = yieldFarmingStrategy.address
         })
 
         it("[Log]: Deployer-contract addresses", async () => {
@@ -87,35 +66,9 @@ contract("YieldFarmingStrategy", function(accounts) {
         it("depositSavings() in the SavingsContract.sol", async () => {
             const underlying = toWei("10")
             let txReceipt1 = await daiToken.approve(SAVINGS_CONTRACT, underlying, { from: deployer })
-            let txReceipt2 = await savingsContract.depositSavings(underlying, user1, { from: deployer })
+            //let txReceipt2 = await savingsContract.depositSavings(underlying, user1, { from: deployer })
         })
 
-        it("saveViaMint() in the SaveWrapper.sol", async () => {
-            // * @dev 1. Mints an mAsset and then deposits to Save/Savings Vault
-            // * @param _mAsset       mAsset address
-            // * @param _bAsset       bAsset address
-            // * @param _save         Save address
-            // * @param _vault        Boosted Savings Vault address (<--This is only deployed on Mainnet)
-            // * @param _amount       Amount of bAsset to mint with
-            // * @param _minOut       Min amount of mAsset to get back
-            // * @param _stake        Add the imAsset to the Boosted Savings Vault?
-            // 
-            // const mAsset = MUSD  /// mUSD
-            // const save = SAVINGS_CONTRACT
-            // const vault = "0x26A09Ae0a531495461757610D95a8c680A7aFE8F"   /// [Todo]: Replace this test address
-            // const bAsset = DAI_TOKEN   /// DAI Mock Token (as a underlying asset) -> [Result]: "Invalid asset."
-            // const amount = toWei("10")
-            // const minOut = toWei("0")
-            // const stake = true
-
-            // let txReceipt1 = await daiToken.approve(SAVING_WRAPPER, amount, { from: deployer })
-            // let txReceipt2 = await saveWrapper.saveViaMint(mAsset, save, vault, bAsset, amount, minOut, stake, { from: deployer })
-
-            // let event = await getEvents(projectTokenFactory, "ProjectTokenCreated")
-            // PROJECT_TOKEN = event._projectToken
-            // projectToken = await ProjectToken.at(PROJECT_TOKEN)
-            // console.log('\n=== PROJECT_TOKEN ===', PROJECT_TOKEN)
-        })
     })
 
 })

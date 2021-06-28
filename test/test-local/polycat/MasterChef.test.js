@@ -32,6 +32,9 @@ contract("MasterChef", function(accounts) {
     let user1 = accounts[1]
     let user2 = accounts[2]
     let user3 = accounts[3]
+    let devAddress = accounts[4]
+    let feeAddress = accounts[5]
+    let vaultAddress = accounts[6]
 
     /// Global contract instance
     let masterChef
@@ -64,12 +67,8 @@ contract("MasterChef", function(accounts) {
         })
 
         it("Deploy the MasterChef contract", async () => {
-            //const fish
             const startBlock = 1
-            const devAddress = user1    /// [Todo]: Replace with eligible address
-            const feeAddress = user2    /// [Todo]: Replace with eligible address
-            const vaultAddress = user3  /// [Todo]: Replace with eligible address
-
+            
             masterChef = await MasterChef.new(FISH_TOKEN, startBlock, devAddress, feeAddress, vaultAddress, { from: deployer })
             MASTER_CHEF = masterChef.address
         })
