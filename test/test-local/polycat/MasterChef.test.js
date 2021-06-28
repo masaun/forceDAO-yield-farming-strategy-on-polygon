@@ -99,7 +99,7 @@ contract("MasterChef", function(accounts) {
         })
 
         it("Transfer ownership of the FishToken to the MasterChef contract", async () => {
-            await fishToken.transferOwnership(MASTER_CHEF, { from: deployer })
+            let txReceipt = await fishToken.transferOwnership(MASTER_CHEF, { from: deployer })
         })
 
         it("[Log]: Deployer-contract addresses", async () => {
@@ -110,17 +110,11 @@ contract("MasterChef", function(accounts) {
     })
 
     describe("\n Preparation in advance", () => {
-        it("Mint 1000 Fish Tokens to user1", async () => {
-            const to = user1
-            const amount = toWei("1000")  /// 1000 $FISH
-            let txReceipt = fishToken.mint(to, amount, { from: deployer })
-        })
-
         it("Transfer 1000 DAI from deployer to 3 users (user1, user2, user3)", async () => {
             const amount = toWei("1000")  /// 1000 $DAI
-            let txReceipt1 = daiToken.transfer(user1, amount, { from: deployer })
-            let txReceipt2 = daiToken.transfer(user2, amount, { from: deployer })
-            let txReceipt3 = daiToken.transfer(user3, amount, { from: deployer })
+            let txReceipt1 = await daiToken.transfer(user1, amount, { from: deployer })
+            let txReceipt2 = await daiToken.transfer(user2, amount, { from: deployer })
+            let txReceipt3 = await daiToken.transfer(user3, amount, { from: deployer })
         })
     })
 
