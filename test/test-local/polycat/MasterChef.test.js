@@ -98,6 +98,10 @@ contract("MasterChef", function(accounts) {
             MASTER_CHEF = masterChef.address
         })
 
+        it("Transfer ownership of the FishToken to the MasterChef contract", async () => {
+            await fishToken.transferOwnership(MASTER_CHEF, { from: deployer })
+        })
+
         it("[Log]: Deployer-contract addresses", async () => {
             console.log('\n=== FISH_TOKEN ===', FISH_TOKEN)
             console.log('\n=== DAI_TOKEN ===', DAI_TOKEN)
@@ -160,7 +164,7 @@ contract("MasterChef", function(accounts) {
             let txReceipt2 = await masterChef.deposit(poolId, stakeAmount, referrer, { from: user2 })
         })
 
-        it("User3 stake 30 DAI at block 318", async () => {
+        it("deposit() - User3 stake 30 DAI at block 318", async () => {
             /// [Note]: Block to mint the FishToken start from block 300.
             /// User3 stake (deposit) 30 DAI at block 318
             await time.advanceBlockTo("317")
@@ -173,7 +177,7 @@ contract("MasterChef", function(accounts) {
             let txReceipt2 = await masterChef.deposit(poolId, stakeAmount, referrer, { from: user3 })
         })
 
-        it("User1 stake more 10 DAI at block 320", async () => {
+        it("deposit() - User1 stake more 10 DAI at block 320", async () => {
             /// [Note]: Block to mint the FishToken start from block 300.
             /// User1 stake (deposit) 10 more DAI at block 320.
             await time.advanceBlockTo("319")
