@@ -59,6 +59,12 @@ npm run test:YieldFarmingStrategy
 ```
 ( `truffle test ./test/test-local/YieldFarmingStrategy.test.js --network local` )  
 
+<br>
+
+```
+npm run test:MasterChef
+```
+( `truffle test ./test/test-local/polycat/MasterChef.test.js --network local` )  
 
 <br>
 
