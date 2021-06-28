@@ -54,7 +54,7 @@ contract MasterChef is Ownable, ReentrancyGuard {
     address public vaultAddress;
 
     // FISH tokens created per block.
-    uint256 public fishPerBlock = 1 ether;
+    uint256 public fishPerBlock = 1 ether;  /// 1 FISH token per block
 
     // Info of each pool.
     PoolInfo[] public poolInfo;
