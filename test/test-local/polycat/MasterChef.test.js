@@ -2,8 +2,11 @@
 const Web3 = require('web3')
 const web3 = new Web3(new Web3.providers.WebsocketProvider('ws://localhost:8545'))
 
+/// web3.js related methods
+const { toWei, fromWei, getEvents } = require('../web3js-helper/web3jsHelper')
+
 /// Openzeppelin test-helper
-const { time, expectRevert } = require('@openzeppelin/test-helpers')
+const { time, constants, expectRevert, expectEvent } = require('@openzeppelin/test-helpers')
 
 /// Import deployed-addresses
 const contractAddressList = require("../../../migrations/addressesList/contractAddress/contractAddress.js")
@@ -15,9 +18,6 @@ const FishToken = artifacts.require("FishToken")
 const DAIMockToken = artifacts.require("DAIMockToken")
 
 /// Deployed-addresses
-
-/// Zero address
-const ZERO_ADDRESS = "0x0000000000000000000000000000000000000000"
 
 
 /**
@@ -42,30 +42,6 @@ contract("MasterChef", function(accounts) {
     let MASTER_CHEF
     let FISH_TOKEN
     let DAI_TOKEN
-
-
-    function toWei(amount) {
-        return web3.utils.toWei(`${ amount }`, 'ether')
-    }
-
-    function fromWei(amount) {
-        return web3.utils.fromWei(`${ amount }`, 'ether')
-    }
-
-    async function getEvents(contractInstance, eventName) {
-        const _latestBlock = await time.latestBlock()
-        const LATEST_BLOCK = Number(String(_latestBlock))
-
-        /// [Note]: Retrieve an event log of eventName (via web3.js v1.0.0)
-        let events = await contractInstance.getPastEvents(eventName, {
-            filter: {},
-            fromBlock: LATEST_BLOCK,  /// [Note]: The latest block on Mainnet
-            //fromBlock: 0,
-            toBlock: 'latest'
-        })
-        //console.log(`\n=== [Event log]: ${ eventName } ===`, events[0].returnValues)
-        return events[0].returnValues
-    } 
 
     describe("\n Accounts", () => {
         it("Show accounts (wallet addresses) list that are used for this test", async () => {
@@ -139,7 +115,7 @@ contract("MasterChef", function(accounts) {
 
             const poolId = 0
             const stakeAmount = toWei('10')  /// 10 DAI
-            const referrer = ZERO_ADDRESS
+            const referrer = constants.ZERO_ADDRESS
 
             let txReceipt1 = await daiToken.approve(MASTER_CHEF, stakeAmount, { from: user1 })
             let txReceipt2 = await masterChef.deposit(poolId, stakeAmount, referrer, { from: user1 })
@@ -152,7 +128,7 @@ contract("MasterChef", function(accounts) {
 
             const poolId = 0
             const stakeAmount = toWei('20')  /// 20 DAI
-            const referrer = ZERO_ADDRESS
+            const referrer = constants.ZERO_ADDRESS
 
             let txReceipt1 = await daiToken.approve(MASTER_CHEF, stakeAmount, { from: user2 })
             let txReceipt2 = await masterChef.deposit(poolId, stakeAmount, referrer, { from: user2 })
@@ -165,7 +141,7 @@ contract("MasterChef", function(accounts) {
 
             const poolId = 0
             const stakeAmount = toWei('30')  /// 30 DAI
-            const referrer = ZERO_ADDRESS
+            const referrer = constants.ZERO_ADDRESS
 
             let txReceipt1 = await daiToken.approve(MASTER_CHEF, stakeAmount, { from: user3 })
             let txReceipt2 = await masterChef.deposit(poolId, stakeAmount, referrer, { from: user3 })
@@ -178,7 +154,7 @@ contract("MasterChef", function(accounts) {
 
             const poolId = 0
             const stakeAmount = toWei('10')  /// 10 DAI
-            const referrer = ZERO_ADDRESS
+            const referrer = constants.ZERO_ADDRESS
 
             let txReceipt1 = await daiToken.approve(MASTER_CHEF, stakeAmount, { from: user1 })
             let txReceipt2 = await masterChef.deposit(poolId, stakeAmount, referrer, { from: user1 })
@@ -201,8 +177,8 @@ contract("MasterChef", function(accounts) {
 
             ///  At this point (At block 321): 
             ///      TotalSupply of FishToken: 1 * (321 - 310) = 11
-            ///      User1 should have: 4*1 + 4*1/3*1 + 2*1/6*1 = 6.666
-            ///      MasterChef contract should have the remaining: 11 - 6.666 = 5.334
+            ///      User1 should have: 4*1 + 4*1/3*1 + 2*1/6*1 = 5.666
+            ///      MasterChef contract should have the remaining: 11 - 5.666 = 6.334
             let totalSupplyOfFishToken = await fishToken.totalSupply()
             console.log('=== totalSupplyOfFishToken ===', fromWei(totalSupplyOfFishToken))
             assert.equal(

@@ -3,7 +3,10 @@ const Web3 = require('web3');
 const web3 = new Web3(new Web3.providers.WebsocketProvider('ws://localhost:8545'))
 
 /// Openzeppelin test-helper
-const { time, expectRevert } = require('@openzeppelin/test-helpers')
+const { time, constants, expectRevert, expectEvent } = require('@openzeppelin/test-helpers')
+
+/// Openzeppelin test-helper
+const { time, constants, expectRevert, expectEvent } = require('@openzeppelin/test-helpers')
 
 /// Import deployed-addresses
 const contractAddressList = require("../../migrations/addressesList/contractAddress/contractAddress.js")
@@ -43,29 +46,6 @@ contract("YieldFarmingStrategy", function(accounts) {
     let SAVE_WRAPPER
     let SAVINGS_CONTRACT
     let DAI_TOKEN
-
-    function toWei(amount) {
-        return web3.utils.toWei(`${ amount }`, 'ether')
-    }
-
-    function fromWei(amount) {
-        return web3.utils.fromWei(`${ amount }`, 'ether')
-    }
-
-    async function getEvents(contractInstance, eventName) {
-        const _latestBlock = await time.latestBlock()
-        const LATEST_BLOCK = Number(String(_latestBlock))
-
-        /// [Note]: Retrieve an event log of eventName (via web3.js v1.0.0)
-        let events = await contractInstance.getPastEvents(eventName, {
-            filter: {},
-            fromBlock: LATEST_BLOCK,  /// [Note]: The latest block on Mainnet
-            //fromBlock: 0,
-            toBlock: 'latest'
-        })
-        //console.log(`\n=== [Event log]: ${ eventName } ===`, events[0].returnValues)
-        return events[0].returnValues
-    } 
 
     describe("\n Accounts", () => {
         it("Show accounts (wallet addresses) list that are used for this test", async () => {
