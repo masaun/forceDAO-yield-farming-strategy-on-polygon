@@ -1,4 +1,4 @@
-const { BN, ether, balance } = require('@penzeppelin/test-helpers');
+const { BN, ether, balance } = require('openzeppelin-test-helpers');
 const { expect } = require('chai');
 const { asyncForEach } = require('./utils');
 

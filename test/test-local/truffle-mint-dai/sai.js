@@ -28,7 +28,7 @@ contract('Truffle Mint SAI', async accounts => {
     expect(new BN(ethBalance)).to.be.bignumber.least(new BN(ether('1')));
   });
 
-  it('should mint SAI for our first 5 generated accounts', async () => {
+  it('should mint 100 SAI for our first 5 generated accounts', async () => {
     // Get 100 SAI for first 5 accounts
     await asyncForEach(accounts.slice(0, 5), async account => {
       // saiAddress is passed to ganache-cli with flag `--unlock`
@@ -40,4 +40,9 @@ contract('Truffle Mint SAI', async accounts => {
       expect(new BN(saiBalance)).to.be.bignumber.least(ether('100'));
     });
   });
+
+  it('SAI balance', async () => {
+      const SaiBalance = await getSaiBalance(accounts[0])
+      console.log('=== SAI balance of accounts[0] ===', web3.utils.fromWei(SaiBalance, 'ether'))
+  })  
 });
