@@ -9,7 +9,7 @@ const ForceSend = artifacts.require('ForceSend');
 const erc20ABI = require('./abi/erc20');
 
 // saiAddress must be unlocked using --unlock 0x89d24A6b4CcB1B6fAA2625fE562bDD9a23260359
-const saiAddress = '0x89d24A6b4CcB1B6fAA2625fE562bDD9a23260359';
+const saiAddress = '0x89d24A6b4CcB1B6fAA2625fE562bDD9a23260359';  // SAI address on Mainnet
 const saiContract = new web3.eth.Contract(erc20ABI, saiAddress);
 
 // Utils
