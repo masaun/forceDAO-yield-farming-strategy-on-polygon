@@ -11,6 +11,7 @@
     "test:MasterChef": "truffle test ./test/test-local/polycat/MasterChef.test.js --network local",
     "test:Sai": "truffle test ./test/test-local/truffle-mint-dai/sai.js --network local",
     "test:Dai": "truffle test ./test/test-local/truffle-mint-dai/dai.js --network local",
+    "test:Usdc": "truffle test ./test/test-local/truffle-mint-dai/usdc.js --network local",
     "compile:local": "truffle compile --reset --network local",
     "migrate:local": "truffle migrate --reset --network local"
   },
