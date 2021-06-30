@@ -6,6 +6,7 @@
     "test": "test"
   },
   "scripts": {
+    "script:YieldFarmingStrategy": "truffle exec ./scripts/polygon-mumbai/YieldFarmingStrategy.script.js --network polygon_mumbai",
     "test": "truffle test ./test/test-local/* --network local",
     "test:YieldFarmingStrategy": "truffle test ./test/test-local/YieldFarmingStrategy.test.js --network local",
     "test:MasterChef": "truffle test ./test/test-local/polycat/MasterChef.test.js --network local",

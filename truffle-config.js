@@ -5,31 +5,12 @@ const mnemonic = process.env.MNEMONIC;
 
 module.exports = {
   networks: {
-    ropsten: {
-      provider: () => new HDWalletProvider(mnemonic, 'https://ropsten.infura.io/v3/' + process.env.INFURA_KEY),
-      network_id: '3',
-      gas: 4712388,
-      //gas: 4465030,          // Original
-      //gasPrice: 5000000000,  // 5 gwei (Original)
-      //gasPrice: 10000000000, // 10 gwei
-      gasPrice: 100000000000,  // 100 gwei
-      skipDryRun: true,        // Skip dry run before migrations? (default: false for public nets)
-    },
-    kovan: {
-      provider: () => new HDWalletProvider(mnemonic, 'https://kovan.infura.io/v3/' + process.env.INFURA_KEY),
-      network_id: '42',
-      gas: 6465030,
-      gasPrice: 5000000000, // 5 gwei
-      //gasPrice: 100000000000,  // 100 gwei
-      skipDryRun: true,     // Skip dry run before migrations? (default: false for public nets)
-    },
-    rinkeby: {
-      provider: () => new HDWalletProvider(mnemonic, "https://rinkeby.infura.io/v3/" + process.env.INFURA_KEY),
-      network_id: 4,
-      gas: 6000000,         // 2 times than before
-      gasPrice: 5000000000, // 5 gwei,
-      skipDryRun: true,     // Skip dry run before migrations? (default: false for public nets)
-      //from: process.env.DEPLOYER_ADDRESS
+    polygon_mumbai: {  /// Mumbai testnet of Matic
+      provider: () => new HDWalletProvider(mnemonic, "https://polygon-mumbai.infura.io/v3/" + process.env.INFURA_KEY),
+      network_id: 80001,
+      confirmations: 2,
+      timeoutBlocks: 200,
+      skipDryRun: true
     },
     goerli: {
       provider: () => new HDWalletProvider(mnemonic, "https://goerli.infura.io/v3/" + process.env.INFURA_KEY),
@@ -47,13 +28,6 @@ module.exports = {
       gasPrice: 2000000000 // 2 gwei
     },
     local: {
-      host: '127.0.0.1',
-      port: 8545,
-      network_id: '*',
-      skipDryRun: true,
-      gasPrice: 5000000000
-    },
-    test: {
       host: '127.0.0.1',
       port: 8545,
       network_id: '*',
