@@ -26,9 +26,6 @@ async function getEvents(contractInstance, eventName) {
     return events[0].returnValues
 } 
 
-///---------------------------------------------------------
-/// Get current block number
-///---------------------------------------------------------
 async function getCurrentBlock() {
     const currentBlock = await web3.eth.getBlockNumber()
     return currentBlock

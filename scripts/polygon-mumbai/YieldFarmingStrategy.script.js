@@ -18,8 +18,8 @@ const YieldFarmingStrategy = artifacts.require("YieldFarmingStrategy")
 const DAIMockToken = artifacts.require("DAIMockToken")
 
 /// Deployed-addresses on Polygon Mumbai
-let FANCET = contractAddressList["Polygon Mumbai"]["AAVE"]["LendingPoolAddressesProvider"]
-//let LP_TOKEN = tokenAddressList["Polygon Mumbai"]["AAVE"][""]
+const LENDING_POOL_ADDRESSES_PROVIDER = contractAddressList["Polygon Mumbai"]["AAVE"]["LendingPoolAddressesProvider"]
+//const LP_TOKEN = tokenAddressList["Polygon Mumbai"]["AAVE"][""]
 
 /// Variable to assign a YieldFarmingStrategy contract address
 let YIELD_FARMING_STRATEGY
