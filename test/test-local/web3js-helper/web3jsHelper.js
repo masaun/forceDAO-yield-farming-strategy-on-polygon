@@ -25,5 +25,17 @@ async function getEvents(contractInstance, eventName) {
     return events[0].returnValues
 } 
 
+async function getCurrentBlock() {
+    const currentBlock = await web3.eth.getBlockNumber()
+    return currentBlock
+}
+
+async function getCurrentTimestamp() {
+    const currentBlock = await web3.eth.getBlockNumber()
+    const currentTimestamp = await web3.eth.getBlock(currentBlock).timestamp
+
+    return currentTimestamp
+}
+
 /// Export methods
-module.exports = { toWei, fromWei, getEvents }
+module.exports = { toWei, fromWei, getEvents, getCurrentBlock, getCurrentTimestamp }
