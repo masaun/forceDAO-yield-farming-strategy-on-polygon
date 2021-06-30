@@ -89,7 +89,7 @@ async function DeploySmartContracts() {
     console.log("Transfer ownership of the FishToken to the MasterChef contract")
     let txReceipt = await fishToken.transferOwnership(MASTER_CHEF, { from: deployer })
 
-    console.log("Deploy the YieldFarmingStrategyToken contract instance")
+    console.log("Deploy the YieldFarmingStrategy contract instance")
     yieldFarmingStrategy = await YieldFarmingStrategy.new(LENDING_POOL_ADDRESSES_PROVIDER, MASTER_CHEF, DAI_TOKEN, { from: deployer })
     YIELD_FARMING_STRATEGY = yieldFarmingStrategy.address
 
