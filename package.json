@@ -9,6 +9,10 @@
     "test": "truffle test ./test/test-local/* --network local",
     "test:YieldFarmingStrategy": "truffle test ./test/test-local/YieldFarmingStrategy.test.js --network local",
     "test:MasterChef": "truffle test ./test/test-local/polycat/MasterChef.test.js --network local",
+    "test:Sai": "truffle test ./test/test-local/truffle-mint-dai/sai.js --network local",
+    "test:Dai": "truffle test ./test/test-local/truffle-mint-dai/dai.js --network local",
+    "test:Usdc": "truffle test ./test/test-local/truffle-mint-dai/usdc.js --network local",
+    "test:Usdt": "truffle test ./test/test-local/truffle-mint-dai/usdt.js --network local",
     "compile:local": "truffle compile --reset --network local",
     "migrate:local": "truffle migrate --reset --network local"
   },
