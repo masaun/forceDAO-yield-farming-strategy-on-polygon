@@ -9,7 +9,6 @@ module.exports = {
             "LendingPool": "0x9198F13B08E299d85E096929fA9781A1E3d5d827"
         },
         "Polycat": {
-            "FishToken": "0x0f30db053d360225f43b845Cc8Fb0A456aFD4CA2",
             "MasterChef": "0xcAe51e0392d577F32E277f3634a1E5D1803b41FA"
         },
         "YieldFarmingStrategy": {
