@@ -72,7 +72,6 @@ contract("YieldFarmingStrategy", function(accounts) {
 
         it("Deploy the MasterChef contract", async () => {
             const startBlock = 1
-            
             masterChef = await MasterChef.new(FISH_TOKEN, startBlock, devAddress, feeAddress, vaultAddress, { from: deployer })
             MASTER_CHEF = masterChef.address
         })
