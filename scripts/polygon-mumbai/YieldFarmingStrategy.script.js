@@ -17,11 +17,10 @@ const tokenAddressList = require("../../migrations/addressesList/tokenAddress/to
 const YieldFarmingStrategy = artifacts.require("YieldFarmingStrategy")
 const MasterChef = artifacts.require("MasterChef")
 const FishToken = artifacts.require("FishToken")
-const DAIMockToken = artifacts.require("DAIMockToken")
 
 /// Deployed-addresses on Polygon Mumbai
 const LENDING_POOL_ADDRESSES_PROVIDER = contractAddressList["Polygon Mumbai"]["AAVE"]["LendingPoolAddressesProvider"]
-//const LP_TOKEN = tokenAddressList["Polygon Mumbai"]["AAVE"][""]
+const DAI_TOKEN = tokenAddressList["Polygon Mumbai"]["DAI"]
 
 /// Variable to assign a YieldFarmingStrategy contract address
 let YIELD_FARMING_STRATEGY
@@ -73,10 +72,6 @@ async function DeploySmartContracts() {
     console.log("Deploy the Fish Token")
     fishToken = await FishToken.new({ from: deployer })
     FISH_TOKEN = fishToken.address
-
-    console.log("Deploy the DAI Mock Token")
-    daiToken = await DAIMockToken.new({ from: deployer })
-    DAI_TOKEN = daiToken.address
 
     console.log("Deploy the MasterChef contract")
     const startBlock = 1
