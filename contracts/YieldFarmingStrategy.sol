@@ -22,7 +22,7 @@ contract YieldFarmingStrategy {
 
     address DAI_ADDRESS;
 
-    constructor(ILendingPoolAddressesProvider _provider, ILendingPool _lendingPool, MasterChef _masterChef, IERC20 _dai) public {
+    constructor(ILendingPoolAddressesProvider _provider, MasterChef _masterChef, IERC20 _dai) public {
         dai = _dai;
         provider = _provider;
         lendingPool = ILendingPool(provider.getLendingPool());

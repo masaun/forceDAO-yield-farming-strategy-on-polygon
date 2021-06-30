@@ -5,6 +5,9 @@ const web3 = new Web3(new Web3.providers.WebsocketProvider('ws://localhost:8545'
 /// Openzeppelin test-helper
 const { time, constants, expectRevert, expectEvent } = require('@openzeppelin/test-helpers')
 
+/// web3.js related methods
+const { toWei, fromWei, getEvents } = require('../web3js-helper/web3jsHelper')
+
 /// Import deployed-addresses
 const contractAddressList = require("../../migrations/addressesList/contractAddress/contractAddress.js")
 const tokenAddressList = require("../../migrations/addressesList/tokenAddress/tokenAddress.js")

@@ -6,15 +6,13 @@ const { asyncForEach } = require('./utils');
 const daiABI = require('./abi/dai');
 
 // userAddress must be unlocked using --unlock ADDRESS
+const userAddress = '0x9eb7f2591ed42dee9315b6e2aaf21ba85ea69f8c';
 const daiAddress = '0x6B175474E89094C44Da98b954EedeAC495271d0F';
 const daiContract = new web3.eth.Contract(daiABI, daiAddress);
 
 contract('Truffle Mint DAI', async accounts => {
-
-  const userAddress = accounts[0];
-
   it('should send ether to the DAI address', async () => {
-    console.log('=== accounts ===', accounts)
+    //console.log('=== accounts ===', accounts)
 
     // Send 0.1 eth to userAddress to have gas to send an ERC20 tx.
     await web3.eth.sendTransaction({
