@@ -62,6 +62,9 @@ async function main() {
 
     console.log("\n------------- Deploy smart contracts on Polygon mumbai testnet -------------")
     await DeploySmartContracts()
+
+    console.log("\n------------- Workflow -------------")
+    await lendToAave()
 }
 
 
@@ -118,4 +121,17 @@ async function DeploySmartContracts() {
 }
 
 
+///-------------------------------------
+/// Workflow
+///-------------------------------------
+async function lendToAave() {
+    const asset = DAI_TOKEN
+    const amount = toWei("100")
+    const onBehalfOf = process.env.DEV_ADDRESS
+    const referralCode = 0
+
+    let txReceipt1 = await daiToken.approve(YIELD_FARMING_STRATEGY, amount, { from: deployer })
+    let txReceipt2 = await yieldFarmingStrategy.lendToAave(asset, amount, onBehalfOf, referralCode, { from: deployer })
+    console.log('=== txReceipt2 (lendToAave method) ===', txReceipt2)
+}
 
