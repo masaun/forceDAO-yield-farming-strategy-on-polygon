@@ -76,14 +76,15 @@ async function DeploySmartContracts() {
     console.log("Create the DAI token contract instance")
     daiToken = await IERC20.at(DAI_TOKEN)
 
-    console.log("Create the Fish Token contract instance")
-    fishToken = await FishToken.at(FISH_TOKEN)
+    // console.log("Create the Fish Token contract instance")
+    // fishToken = await FishToken.at(FISH_TOKEN)
 
-    console.log("Create the MasterChef contract")
-    masterChef = await MasterChef.at(MASTER_CHEF)
+    // console.log("Create the MasterChef contract")
+    // masterChef = await MasterChef.at(MASTER_CHEF)
 
-    console.log("Create the YieldFarmingStrategy contract instance")
-    yieldFarmingStrategy = await YieldFarmingStrategy.at(YIELD_FARMING_STRATEGY)
+    // console.log("Create the YieldFarmingStrategy contract instance")
+    // yieldFarmingStrategy = await YieldFarmingStrategy.at(YIELD_FARMING_STRATEGY)
+
 
     // console.log("Deploy the Fish Token")
     // fishToken = await FishToken.new({ from: deployer })

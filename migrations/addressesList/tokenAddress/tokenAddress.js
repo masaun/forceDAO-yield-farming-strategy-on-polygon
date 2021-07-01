@@ -3,7 +3,7 @@ module.exports = {
     },
     "Polygon Mumbai": {
         "Polycat": {
-            "FishToken": "0x0f30db053d360225f43b845Cc8Fb0A456aFD4CA2"
+            "FishToken": "0xcD262e5FD35D26b6d1adD92ea6436909F6b3dcB9"
         },
         "ERC20": {
             "DAI": "0x001B3B4d0F3714Ca98ba10F6042DaEbF0B1B7b6F",
