@@ -15,11 +15,12 @@ const tokenAddressList = require("../../migrations/addressesList/tokenAddress/to
 
 /// Artifact of smart contracts 
 const YieldFarmingStrategy = artifacts.require("YieldFarmingStrategy")
-const DAIMockToken = artifacts.require("DAIMockToken")
+const MasterChef = artifacts.require("MasterChef")
+const FishToken = artifacts.require("FishToken")
 
 /// Deployed-addresses on Polygon Mumbai
 const LENDING_POOL_ADDRESSES_PROVIDER = contractAddressList["Polygon Mumbai"]["AAVE"]["LendingPoolAddressesProvider"]
-//const LP_TOKEN = tokenAddressList["Polygon Mumbai"]["AAVE"][""]
+const DAI_TOKEN = tokenAddressList["Polygon Mumbai"]["DAI"]
 
 /// Variable to assign a YieldFarmingStrategy contract address
 let YIELD_FARMING_STRATEGY
@@ -68,14 +69,29 @@ async function setWalletAddress() {
 }
 
 async function DeploySmartContracts() {
-    console.log("Deploy the YieldFarmingStrategyToken contract instance")
-    // YieldFarmingStrategyToken = await YieldFarmingStrategyToken.new({ from: deployer })
-    // //YieldFarmingStrategyToken = await YieldFarmingStrategyToken.at(YieldFarmingStrategy_TOKEN)
-    // YieldFarmingStrategy_TOKEN = YieldFarmingStrategyToken.address
+    console.log("Deploy the Fish Token")
+    fishToken = await FishToken.new({ from: deployer })
+    FISH_TOKEN = fishToken.address
 
+    console.log("Deploy the MasterChef contract")
+    const startBlock = 1
+    const devAddress = process.env.DEV_ADDRESS
+    const feeAddress = process.env.FEE_ADDRESS
+    const vaultAddress = process.env.VAULT_ADDRESS
+    masterChef = await MasterChef.new(FISH_TOKEN, startBlock, devAddress, feeAddress, vaultAddress, { from: deployer })
+    MASTER_CHEF = masterChef.address
 
-    // /// Logs (each deployed-contract addresses)
-    // console.log('=== REWARD_TOKEN ===', REWARD_TOKEN)
-    // console.log('=== LP_TOKEN ===', LP_TOKEN)    
-    // console.log('=== YieldFarmingStrategy ===', YieldFarmingStrategy)
+    console.log("Transfer ownership of the FishToken to the MasterChef contract")
+    let txReceipt = await fishToken.transferOwnership(MASTER_CHEF, { from: deployer })
+
+    console.log("Deploy the YieldFarmingStrategy contract instance")
+    yieldFarmingStrategy = await YieldFarmingStrategy.new(LENDING_POOL_ADDRESSES_PROVIDER, MASTER_CHEF, DAI_TOKEN, { from: deployer })
+    YIELD_FARMING_STRATEGY = yieldFarmingStrategy.address
+
+    /// [Log]: Deployer-contract addresses
+    console.log('\n=== FISH_TOKEN ===', FISH_TOKEN)
+    console.log('\n=== DAI_TOKEN ===', DAI_TOKEN)
+    console.log('\n=== MASTER_CHEF ===', MASTER_CHEF)
+    console.log('\n=== LENDING_POOL_ADDRESSES_PROVIDER ===', LENDING_POOL_ADDRESSES_PROVIDER)            
+    console.log('\n=== YIELD_FARMING_STRATEGY ===', YIELD_FARMING_STRATEGY) 
 }

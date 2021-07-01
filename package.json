@@ -15,7 +15,9 @@
     "test:Usdc": "truffle test ./test/test-local/truffle-mint-dai/usdc.js --network local",
     "test:Usdt": "truffle test ./test/test-local/truffle-mint-dai/usdt.js --network local",
     "compile:local": "truffle compile --reset --network local",
-    "migrate:local": "truffle migrate --reset --network local"
+    "migrate:local": "truffle migrate --reset --network local",
+    "compile:polygon_mumbai": "truffle compile --reset --network polygon_mumbai",
+    "migrate:polygon_mumbai": "truffle migrate --reset --network polygon_mumbai"
   },
   "author": "masaun",
   "license": "MIT",
