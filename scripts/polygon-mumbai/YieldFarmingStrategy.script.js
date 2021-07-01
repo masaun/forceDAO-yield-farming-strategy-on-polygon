@@ -20,11 +20,16 @@ const FishToken = artifacts.require("FishToken")
 const IERC20 = artifacts.require("IERC20")
 
 /// Deployed-addresses on Polygon Mumbai
-const YIELD_FARMING_STRATEGY = contractAddressList["Polygon Mumbai"]["YieldFarmingStrategy"]["YieldFarmingStrategy"]
 const LENDING_POOL_ADDRESSES_PROVIDER = contractAddressList["Polygon Mumbai"]["AAVE"]["LendingPoolAddressesProvider"]
 const DAI_TOKEN = tokenAddressList["Polygon Mumbai"]["ERC20"]["DAI"]
-const FISH_TOKEN = tokenAddressList["Polygon Mumbai"]["Polycat"]["FishToken"]
-const MASTER_CHEF = contractAddressList["Polygon Mumbai"]["Polycat"]["MasterChef"]
+
+/// Deployed-addresses on Polygon Mumbai ([Todo]: Finally, it will be replaced with contractAddressList/tokenAddressList)
+const YIELD_FARMING_STRATEGY = YieldFarmingStrategy.address
+const FISH_TOKEN = FishToken.address
+const MASTER_CHEF = MasterChef.address
+// const YIELD_FARMING_STRATEGY = contractAddressList["Polygon Mumbai"]["YieldFarmingStrategy"]["YieldFarmingStrategy"]
+// const FISH_TOKEN = tokenAddressList["Polygon Mumbai"]["Polycat"]["FishToken"]
+// const MASTER_CHEF = contractAddressList["Polygon Mumbai"]["Polycat"]["MasterChef"]
 
 /// Global contract instance
 let yieldFarmingStrategy
