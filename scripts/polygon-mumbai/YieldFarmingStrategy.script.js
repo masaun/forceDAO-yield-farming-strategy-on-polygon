@@ -68,6 +68,7 @@ async function main() {
 
     console.log("\n------------- Workflow -------------")
     await lendToAave()
+    await borrowFromAave()
 }
 
 
@@ -147,3 +148,18 @@ async function lendToAave() {
     console.log('=== txReceipt2 (lendToAave method) ===', txReceipt2)
 }
 
+async function borrowFromAave() {
+    const asset = DAI_TOKEN         /// @notice - address of the underlying asset
+    const amount = toWei("10")      /// 10 DAI
+    const interestRateMode = 1      /// @notice - the type of borrow debt. Stable: 1, Variable: 2
+    const referralCode = 0
+    const onBehalfOf = deployer
+
+    /// [Test]: Using lendingPool.borrow() directly
+    let txReceipt = await lendingPool.borrow(asset, amount, interestRateMode, referralCode, onBehalfOf, { from: deployer })
+    console.log('=== txReceipt (borrow method) ===', txReceipt)
+
+    /// [Actual code]: Using yieldFarmingStrategy.borrowFromAave()
+    // let txReceipt = await yieldFarmingStrategy.borrowFromAave(asset, amount, interestRateMode, { from: deployer })
+    // console.log('=== txReceipt (borrowFromAave method) ===', txReceipt2)
+}
