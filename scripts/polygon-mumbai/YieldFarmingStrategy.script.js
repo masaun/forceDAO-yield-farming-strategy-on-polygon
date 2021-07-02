@@ -18,9 +18,11 @@ const YieldFarmingStrategy = artifacts.require("YieldFarmingStrategy")
 const MasterChef = artifacts.require("MasterChef")
 const FishToken = artifacts.require("FishToken")
 const IERC20 = artifacts.require("IERC20")
+const ILendingPool = artifacts.require("ILendingPool")
 
 /// Deployed-addresses on Polygon Mumbai
 const LENDING_POOL_ADDRESSES_PROVIDER = contractAddressList["Polygon Mumbai"]["AAVE"]["LendingPoolAddressesProvider"]
+const LENDING_POOL = contractAddressList["Polygon Mumbai"]["AAVE"]["LendingPool"]
 const DAI_TOKEN = tokenAddressList["Polygon Mumbai"]["ERC20"]["DAI"]
 
 /// Deployed-addresses on Polygon Mumbai ([Todo]: Finally, it will be replaced with contractAddressList/tokenAddressList)
@@ -36,6 +38,7 @@ let yieldFarmingStrategy
 let daiToken
 let fishToken
 let masterChef
+let lendingPool
 
 /// Acccounts
 let deployer
@@ -81,6 +84,9 @@ async function setWalletAddress() {
 }
 
 async function DeploySmartContracts() {
+    console.log("Create the LendingPool contract instance")
+    lendingPool = await ILendingPool.at(LENDING_POOL)
+
     console.log("Create the DAI token contract instance")
     daiToken = await IERC20.at(DAI_TOKEN)
 
@@ -130,8 +136,14 @@ async function lendToAave() {
     const onBehalfOf = deployer  /// @notice - address whom will receive the aTokens. 
     const referralCode = 0       /// @notice - Use 0 for no referral.
 
-    let txReceipt1 = await daiToken.approve(YIELD_FARMING_STRATEGY, amount, { from: deployer })
-    let txReceipt2 = await yieldFarmingStrategy.lendToAave(asset, amount, onBehalfOf, referralCode, { from: deployer })
-    console.log('=== txReceipt2 (lendToAave method) ===', txReceipt2)
+    /// [Test]: Using lendingPool.deposit() directly
+    let txReceipt1 = await daiToken.approve(LENDING_POOL, amount, { from: deployer })
+    let txReceipt2 = await lendingPool.deposit(asset, amount, onBehalfOf, referralCode, { from: deployer })
+    console.log('=== txReceipt2 (deposit method) ===', txReceipt2)
+
+    /// [Actual code]: Using yieldFarmingStrategy.lendToAave()
+    // let txReceipt1 = await daiToken.approve(YIELD_FARMING_STRATEGY, amount, { from: deployer })
+    // let txReceipt2 = await yieldFarmingStrategy.lendToAave(asset, amount, onBehalfOf, referralCode, { from: deployer })
+    // console.log('=== txReceipt2 (lendToAave method) ===', txReceipt2)
 }
 

@@ -46,7 +46,7 @@ contract YieldFarmingStrategy {
         // Approve LendingPool contract to move your DAI
         dai.approve(provider.getLendingPoolCollateralManager(), amount);
 
-        // Deposit 1000 DAI
+        // Deposit 10 DAI
         lendingPool.deposit(asset, amount, onBehalfOf, referralCode);
     }
 
