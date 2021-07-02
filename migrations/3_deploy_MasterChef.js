@@ -25,4 +25,5 @@ module.exports = async function(deployer) {
     /// Transfer ownership of the FishToken to the MasterChef contract
     let fishToken  = await FishToken.at(FISH_TOKEN)
     let txReceipt = await fishToken.transferOwnership(MASTER_CHEF)
+    console.log("Successful to transfer ownership of the FishToken")
 }
