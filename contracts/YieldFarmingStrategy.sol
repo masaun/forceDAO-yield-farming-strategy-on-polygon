@@ -67,16 +67,13 @@ contract YieldFarmingStrategy {
     function borrowFromAave(
         address asset,
         uint256 amount,
-        uint256 interestRateMode,
-        uint16 referralCode,
-        address onBehalfOf
+        uint256 interestRateMode
     ) public returns (bool) {
         //address daiAddress = address(0x6B175474E89094C44Da98b954EedeAC495271d0F); // mainnet DAI
         //uint256 amount = 1000 * 1e18;
-
-        /// 1 is stable rate, 2 is variable rate
-        //uint256 variableRate = 2;
-        //uint256 referral = 0;
+        //uint interestRateMode       /// @notice - the type of borrow debt. Stable: 1, Variable: 2
+        uint16 referralCode = 0;
+        address onBehalfOf = address(this);
 
         /// Borrow method call
         lendingPool.borrow(asset, amount, interestRateMode, referralCode, onBehalfOf);
