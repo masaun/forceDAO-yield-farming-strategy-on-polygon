@@ -125,10 +125,10 @@ async function DeploySmartContracts() {
 /// Workflow
 ///-------------------------------------
 async function lendToAave() {
-    const asset = DAI_TOKEN
-    const amount = toWei("100")
-    const onBehalfOf = process.env.DEV_ADDRESS
-    const referralCode = 0
+    const asset = DAI_TOKEN      /// @notice - address of the underlying asset
+    const amount = toWei("10")   /// 10 DAI
+    const onBehalfOf = deployer  /// @notice - address whom will receive the aTokens. 
+    const referralCode = 0       /// @notice - Use 0 for no referral.
 
     let txReceipt1 = await daiToken.approve(YIELD_FARMING_STRATEGY, amount, { from: deployer })
     let txReceipt2 = await yieldFarmingStrategy.lendToAave(asset, amount, onBehalfOf, referralCode, { from: deployer })

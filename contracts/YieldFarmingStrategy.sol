@@ -35,6 +35,8 @@ contract YieldFarmingStrategy {
      * @notice - Lend ERC20 token into the AAVE Lending Market
      */
     function lendToAave(address asset, uint256 amount, address onBehalfOf, uint16 referralCode) public returns (bool) {
+        dai.transferFrom(msg.sender, address(this), amount);
+
         // Input variables
         //address asset = DAI_ADDRESS;
         //uint256 amount = 1000 * 1e18;
