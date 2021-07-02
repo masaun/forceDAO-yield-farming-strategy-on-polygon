@@ -162,16 +162,16 @@ async function collateralizeForAave() {
 
 async function borrowFromAave() {
     const asset = DAI_TOKEN         /// @notice - address of the underlying asset
-    const amount = toWei("10")      /// 10 DAI
-    const interestRateMode = 1      /// @notice - the type of borrow debt. Stable: 1, Variable: 2
+    const amount = toWei("5")       /// 5 DAI (Note: It's possible to borrow DAI until 60% of total collateralized-asset. In this case, 10 DAI is already collateralized. Therefore, It's possible to borrow until 6 DAI)
+    const interestRateMode = 2      /// @notice - the type of borrow debt. Stable: 1, Variable: 2
     const referralCode = 0
     const onBehalfOf = deployer
 
     /// [Test]: Using lendingPool.borrow() directly
-    let txReceipt = await lendingPool.borrow(asset, amount, interestRateMode, referralCode, onBehalfOf, { from: deployer })
-    console.log('=== txReceipt (borrow method) ===', txReceipt)
+    //let txReceipt = await lendingPool.borrow(asset, amount, interestRateMode, referralCode, onBehalfOf, { from: deployer })
+    //console.log('=== txReceipt (borrow method) ===', txReceipt)
 
     /// [Actual code]: Using yieldFarmingStrategy.borrowFromAave()
-    // let txReceipt = await yieldFarmingStrategy.borrowFromAave(asset, amount, interestRateMode, { from: deployer })
-    // console.log('=== txReceipt (borrowFromAave method) ===', txReceipt2)
+    let txReceipt = await yieldFarmingStrategy.borrowFromAave(asset, amount, interestRateMode, { from: deployer })
+    console.log('=== txReceipt (borrowFromAave method) ===', txReceipt)
 }
