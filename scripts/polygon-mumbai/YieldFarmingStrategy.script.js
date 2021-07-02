@@ -68,6 +68,7 @@ async function main() {
 
     console.log("\n------------- Workflow -------------")
     await lendToAave()
+    await collateralizeForAave()
     await borrowFromAave()
 }
 
@@ -146,6 +147,17 @@ async function lendToAave() {
     let txReceipt1 = await daiToken.approve(YIELD_FARMING_STRATEGY, amount, { from: deployer })
     let txReceipt2 = await yieldFarmingStrategy.lendToAave(asset, amount, { from: deployer })
     console.log('=== txReceipt2 (lendToAave method) ===', txReceipt2)
+}
+
+async function collateralizeForAave() {
+    const asset = DAI_TOKEN         /// @notice - address of the underlying asset
+    const useAsCollateral = true    /// @notice - "true" if the asset should be used as collateral
+    /// [Test]: Using lendingPool.setUserUseReserveAsCollateral() directly
+    //let txReceipt = await lendingPool.setUserUseReserveAsCollateral(asset, useAsCollateral, { from: deployer })
+
+    /// [Actual code]: Using yieldFarmingStrategy.collateralToAave()
+    let txReceipt = await yieldFarmingStrategy.collateralToAave(asset, { from: deployer })
+    console.log('=== txReceipt (setUserUseReserveAsCollateral method) ===', txReceipt)
 }
 
 async function borrowFromAave() {
