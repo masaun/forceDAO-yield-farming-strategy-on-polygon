@@ -68,6 +68,7 @@ async function main() {
 
     console.log("\n------------- Workflow -------------")
     await lendToAave()
+    await borrowFromAave()
 }
 
 
@@ -153,5 +154,5 @@ async function borrowFromAave() {
     const interestRateMode = 1      /// @notice - the type of borrow debt. Stable: 1, Variable: 2
 
     let txReceipt = await yieldFarmingStrategy.borrowFromAave(asset, amount, interestRateMode, { from: deployer })
-    console.log('=== txReceipt (lendToAave method) ===', txReceipt2)
+    console.log('=== txReceipt (borrowFromAave method) ===', txReceipt2)
 }
