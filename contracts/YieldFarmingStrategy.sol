@@ -20,6 +20,7 @@ contract YieldFarmingStrategy {
     ILendingPool public lendingPool;
     MasterChef public masterChef;
 
+    address LENDING_POOL;
     address DAI_ADDRESS;
 
     constructor(ILendingPoolAddressesProvider _provider, MasterChef _masterChef, IERC20 _dai) public {
@@ -28,23 +29,24 @@ contract YieldFarmingStrategy {
         lendingPool = ILendingPool(provider.getLendingPool());
         masterChef = _masterChef;
 
+        LENDING_POOL = provider.getLendingPool();
         DAI_ADDRESS = address(dai);
     }
 
     /**
      * @notice - Lend ERC20 token into the AAVE Lending Market
      */
-    function lendToAave(address asset, uint256 amount, address onBehalfOf, uint16 referralCode) public returns (bool) {
+    function lendToAave(address asset, uint256 amount) public returns (bool) {
         dai.transferFrom(msg.sender, address(this), amount);
 
         // Input variables
         //address asset = DAI_ADDRESS;
         //uint256 amount = 1000 * 1e18;
-        //address onBehalfOf = msg.sender;
-        //uint16 referralCode = 0;
+        address onBehalfOf = address(this);
+        uint16 referralCode = 0;
 
         // Approve LendingPool contract to move your DAI
-        dai.approve(provider.getLendingPoolCollateralManager(), amount);
+        dai.approve(LENDING_POOL, amount);
 
         // Deposit 10 DAI
         lendingPool.deposit(asset, amount, onBehalfOf, referralCode);

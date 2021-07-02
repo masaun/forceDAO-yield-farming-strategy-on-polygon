@@ -131,19 +131,19 @@ async function DeploySmartContracts() {
 /// Workflow
 ///-------------------------------------
 async function lendToAave() {
-    const asset = DAI_TOKEN      /// @notice - address of the underlying asset
-    const amount = toWei("10")   /// 10 DAI
-    const onBehalfOf = deployer  /// @notice - address whom will receive the aTokens. 
-    const referralCode = 0       /// @notice - Use 0 for no referral.
+    const asset = DAI_TOKEN         /// @notice - address of the underlying asset
+    const amount = toWei("10")      /// 10 DAI
+    // const onBehalfOf = deployer  /// @notice - address whom will receive the aTokens. 
+    // const referralCode = 0       /// @notice - Use 0 for no referral.
 
     /// [Test]: Using lendingPool.deposit() directly
-    let txReceipt1 = await daiToken.approve(LENDING_POOL, amount, { from: deployer })
-    let txReceipt2 = await lendingPool.deposit(asset, amount, onBehalfOf, referralCode, { from: deployer })
-    console.log('=== txReceipt2 (deposit method) ===', txReceipt2)
+    // let txReceipt1 = await daiToken.approve(LENDING_POOL, amount, { from: deployer })
+    // let txReceipt2 = await lendingPool.deposit(asset, amount, onBehalfOf, referralCode, { from: deployer })
+    // console.log('=== txReceipt2 (deposit method) ===', txReceipt2)
 
     /// [Actual code]: Using yieldFarmingStrategy.lendToAave()
-    // let txReceipt1 = await daiToken.approve(YIELD_FARMING_STRATEGY, amount, { from: deployer })
-    // let txReceipt2 = await yieldFarmingStrategy.lendToAave(asset, amount, onBehalfOf, referralCode, { from: deployer })
-    // console.log('=== txReceipt2 (lendToAave method) ===', txReceipt2)
+    let txReceipt1 = await daiToken.approve(YIELD_FARMING_STRATEGY, amount, { from: deployer })
+    let txReceipt2 = await yieldFarmingStrategy.lendToAave(asset, amount, { from: deployer })
+    console.log('=== txReceipt2 (lendToAave method) ===', txReceipt2)
 }
 
