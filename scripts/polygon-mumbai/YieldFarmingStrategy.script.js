@@ -66,10 +66,13 @@ async function main() {
     console.log("\n------------- Deploy smart contracts on Polygon mumbai testnet -------------")
     await DeploySmartContracts()
 
-    console.log("\n------------- Workflow -------------")
+    console.log("\n------------- Workflow of AAVE-------------")
     await lendToAave()
     await collateralizeForAave()
     await borrowFromAave()
+
+    console.log("\n------------- Workflow of the Polycat.finance ------------")
+    await addToPolycatPool()
 }
 
 
@@ -175,3 +178,19 @@ async function borrowFromAave() {
     let txReceipt = await yieldFarmingStrategy.borrowFromAave(asset, amount, interestRateMode, { from: deployer })
     console.log('=== txReceipt (borrowFromAave method) ===', txReceipt)
 }
+
+
+///-----------------------------------
+/// Workflow of the Polycat.finance
+///-----------------------------------
+async function addToPolycatPool() {
+    console.log("add() - Add a new ERC20 Token (DAI) Pool as a target")
+            
+    /// [Note]: 1 FISH (1e18) tokens created per block
+    const allocPoint = "100"
+    const lpToken = DAI_TOKEN   /// [Note]: Using ERC20 Token (DAI) as a single staking pool
+    const depositFeeBP = 4      /// [Note]: Deposit Fee == 4%
+    let txReceipt = await masterChef.add(allocPoint, lpToken, depositFeeBP, { from: deployer })
+}
+
+
