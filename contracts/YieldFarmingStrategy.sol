@@ -82,8 +82,11 @@ contract YieldFarmingStrategy {
     /**
      * @notice - Lend (Deposit) ERC20 tokens into the Polycat Pool
      */ 
-    function lendIntoPolycatPool() public returns (bool) {
-        // [Todo]:
+    function lendIntoPolycatPool(uint256 poolId, uint256 stakeAmount, address referrer) public returns (bool) {
+        // Approve LendingPool contract to move your DAI
+        dai.approve(LENDING_POOL, amount);
+
+        masterChef.deposit(poolId, stakeAmount, referrer);
     }
 
 }
