@@ -244,8 +244,3 @@ async function depositToPolycatPool() {
     let txReceipt2 = await yieldFarmingStrategy.lendIntoPolycatPool(DAI_TOKEN, poolId, stakeAmount, referrer, { from: deployer })
     console.log('=== txReceipt (deposit method of the Polycat.finance) ===', txReceipt2)
 }
-
-
-async function something() {
-    /// [Todo]: Next
-}

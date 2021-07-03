@@ -22,6 +22,7 @@ contract YieldFarmingStrategy {
 
     address LENDING_POOL;
     address DAI_ADDRESS;
+    address MASTER_CHEF;
 
     constructor(ILendingPoolAddressesProvider _provider, MasterChef _masterChef, IERC20 _dai) public {
         dai = _dai;
@@ -31,6 +32,7 @@ contract YieldFarmingStrategy {
 
         LENDING_POOL = provider.getLendingPool();
         DAI_ADDRESS = address(dai);
+        MASTER_CHEF = address(masterChef);
     }
 
     /**
@@ -83,8 +85,8 @@ contract YieldFarmingStrategy {
      * @notice - Lend (Deposit) ERC20 tokens into the Polycat Pool
      */ 
     function lendIntoPolycatPool(address asset, uint256 poolId, uint256 stakeAmount, address referrer) public returns (bool) {
-        // Approve LendingPool contract to move your DAI
-        IERC20(asset).approve(LENDING_POOL, stakeAmount);
+        // Approve the MasterChef contract to move your DAI
+        IERC20(asset).approve(MASTER_CHEF, stakeAmount);
 
         masterChef.deposit(poolId, stakeAmount, referrer);
     }
