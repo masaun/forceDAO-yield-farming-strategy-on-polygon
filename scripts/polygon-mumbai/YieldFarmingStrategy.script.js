@@ -70,7 +70,7 @@ async function main() {
 
     console.log("\n------------- Deploy smart contracts on Polygon mumbai testnet -------------")
     await DeploySmartContracts()
-    await getLpTokenListOfEachPools()
+    //await getLpTokenListOfEachPools()
 
     console.log("\n------------- Workflow of AAVE-------------")
     await lendToAave()
@@ -101,9 +101,6 @@ async function DeploySmartContracts() {
 
     console.log("Create the DAI token contract instance")
     daiToken = await IERC20.at(DAI_TOKEN)
-
-    console.log("Create the variableDebtmDAI (=Aave Matic Market variable debt mDAI) contract instance")
-    variableDebtmDAI = await IERC20.at(VARIABLE_DEBT_MDAI_TOKEN)
 
     console.log("Create the Fish Token contract instance")
     fishToken = await FishToken.at(FISH_TOKEN)
@@ -152,8 +149,6 @@ async function getLpTokenListOfEachPools() {
     let lpTokenListOfEachPools = []
     for (poolId = 0; poolId < currentPoolLength; ++poolId) {
         const _poolInfo = await masterChef.poolInfo(poolId)
-        console.log('=== Pool info in the MasterChef ===', _poolInfo)
-
         const lpToken = _poolInfo["0"]
         console.log('=== lpToken of PoolInfo ===', lpToken) 
 
@@ -231,7 +226,7 @@ async function addToPolycatPool() {
 
             /// [Note]: 1 FISH (1e18) tokens created per block
             const allocPoint = "100"
-            const lpToken = VARIABLE_DEBT_MDAI_TOKEN   /// [Note]: Using ERC20 Token (AAVE Variable Debt mDAI) as a single staking pool
+            const lpToken = DAI_TOKEN   /// [Note]: Using ERC20 Token (DAI) as a single staking pool
             const depositFeeBP = 4      /// [Note]: Deposit Fee == 4%
             let txReceipt = await masterChef.add(allocPoint, lpToken, depositFeeBP, { from: deployer })
             console.log('=== txReceipt (add method of the Polycat.finance) ===', txReceipt)
@@ -243,11 +238,13 @@ async function depositToPolycatPool() {
     console.log("deposit() - User1 stake 10 DAI at block 310")
     /// [Note]: Block to mint the FishToken start from block 300.
     /// User1 stake (deposit) 10 DAI tokens at block 310.
-    const poolId = 1                 /// Pool ID = 1 is the Pool for the AAVE Variable Debt mDAI
-    const stakeAmount = toWei('10')  /// 10 AAVE Variable Debt mDAI
+    const poolId = 0                /// Pool ID = 0 is the Pool for the DAI
+    const stakeAmount = toWei('1')  /// 1 DAI
     const referrer = constants.ZERO_ADDRESS
 
-    let txReceipt1 = await variableDebtmDAI.approve(MASTER_CHEF, stakeAmount, { from: deployer })
+    let txReceipt1 = await daiToken.approve(MASTER_CHEF, stakeAmount, { from: deployer })
+    console.log('=== txReceipt (approve method of the DAI) ===', txReceipt1)
+
     let txReceipt2 = await masterChef.deposit(poolId, stakeAmount, referrer, { from: deployer })
     console.log('=== txReceipt (deposit method of the Polycat.finance) ===', txReceipt2)
 }
