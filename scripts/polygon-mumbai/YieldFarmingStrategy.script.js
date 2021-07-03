@@ -40,6 +40,7 @@ const MASTER_CHEF = MasterChef.address
 /// Global contract instance
 let yieldFarmingStrategy
 let daiToken
+let variableDebtmDAI   /// [Note]: Aave Matic Market variable debt mDAI
 let fishToken
 let masterChef
 let lendingPool
@@ -69,6 +70,7 @@ async function main() {
 
     console.log("\n------------- Deploy smart contracts on Polygon mumbai testnet -------------")
     await DeploySmartContracts()
+    await getLpTokenListOfEachPools()
 
     console.log("\n------------- Workflow of AAVE-------------")
     await lendToAave()
@@ -99,6 +101,9 @@ async function DeploySmartContracts() {
 
     console.log("Create the DAI token contract instance")
     daiToken = await IERC20.at(DAI_TOKEN)
+
+    console.log("Create the variableDebtmDAI (=Aave Matic Market variable debt mDAI) contract instance")
+    variableDebtmDAI = await IERC20.at(VARIABLE_DEBT_MDAI_TOKEN)
 
     console.log("Create the Fish Token contract instance")
     fishToken = await FishToken.at(FISH_TOKEN)
@@ -134,6 +139,28 @@ async function DeploySmartContracts() {
     console.log('\n=== MASTER_CHEF ===', MASTER_CHEF)
     console.log('\n=== LENDING_POOL_ADDRESSES_PROVIDER ===', LENDING_POOL_ADDRESSES_PROVIDER)            
     console.log('\n=== YIELD_FARMING_STRATEGY ===', YIELD_FARMING_STRATEGY) 
+}
+
+///------------------------------------------------
+/// Pool Info in the MasterChef of Polycat.finance
+///------------------------------------------------
+async function getLpTokenListOfEachPools() {
+    const _poolLength = await masterChef.poolLength()
+    const currentPoolLength = Number(String(_poolLength))
+    console.log('=== Pool length in the MasterChef ===', currentPoolLength)
+
+    let lpTokenListOfEachPools = []
+    for (poolId = 0; poolId < currentPoolLength; ++poolId) {
+        const _poolInfo = await masterChef.poolInfo(poolId)
+        console.log('=== Pool info in the MasterChef ===', _poolInfo)
+
+        const lpToken = _poolInfo["0"]
+        console.log('=== lpToken of PoolInfo ===', lpToken) 
+
+        lpTokenListOfEachPools.push(lpToken)
+    }
+
+    return lpTokenListOfEachPools
 }
 
 
@@ -188,26 +215,27 @@ async function borrowFromAave() {
 ///-----------------------------------
 /// Workflow of the Polycat.finance
 ///-----------------------------------
-async function addToPolycatPool() {
-    console.log("add() - Add a new ERC20 Token (DAI) Pool as a target")
-            
-    /// [Note]: 1 FISH (1e18) tokens created per block
-    const allocPoint = "100"
-    const lpToken = DAI_TOKEN   /// [Note]: Using ERC20 Token (DAI) as a single staking pool
-    const depositFeeBP = 4      /// [Note]: Deposit Fee == 4%
-    let txReceipt = await masterChef.add(allocPoint, lpToken, depositFeeBP, { from: deployer })
-    console.log('=== txReceipt (add method) ===', txReceipt)
-}
 
 async function addToPolycatPool() {
-    console.log("add() - Add a new ERC20 Token (DAI) Pool as a target")
-            
-    /// [Note]: 1 FISH (1e18) tokens created per block
-    const allocPoint = "100"
-    const lpToken = VARIABLE_DEBT_MDAI_TOKEN   /// [Note]: Using ERC20 Token (AAVE Variable Debt mDAI) as a single staking pool
-    const depositFeeBP = 4      /// [Note]: Deposit Fee == 4%
-    let txReceipt = await masterChef.add(allocPoint, lpToken, depositFeeBP, { from: deployer })
-    console.log('=== txReceipt (add method of the Polycat.finance) ===', txReceipt)
+    console.log("Get ERC20 token list of each pools")
+    let lpTokenListOfEachPools = getLpTokenListOfEachPools()
+
+    /// @notice - Only case that there is no pool which has ERC20 token assigned, add() method is executed.
+    for (poolId = 0; poolId < lpTokenListOfEachPools.length; ++poolId) {
+        if (lpTokenListOfEachPools[poolId] != VARIABLE_DEBT_MDAI_TOKEN) {
+            console.log("add() - Add a new ERC20 Token (DAI) Pool as a target")
+            /// [Note]: If the Pool of adding ERC20 token already exist, this method will be reverted.
+            const _poolInfo = await masterChef.poolInfo()
+            console.log('=== Pool Info in the MasterChef ===', _poolInfo)
+
+            /// [Note]: 1 FISH (1e18) tokens created per block
+            const allocPoint = "100"
+            const lpToken = VARIABLE_DEBT_MDAI_TOKEN   /// [Note]: Using ERC20 Token (AAVE Variable Debt mDAI) as a single staking pool
+            const depositFeeBP = 4      /// [Note]: Deposit Fee == 4%
+            let txReceipt = await masterChef.add(allocPoint, lpToken, depositFeeBP, { from: deployer })
+            console.log('=== txReceipt (add method of the Polycat.finance) ===', txReceipt)
+        }
+    }
 }
 
 async function depositToPolycatPool() {
@@ -218,7 +246,7 @@ async function depositToPolycatPool() {
     const stakeAmount = toWei('10')  /// 10 DAI
     const referrer = constants.ZERO_ADDRESS
 
-    let txReceipt1 = await daiToken.approve(MASTER_CHEF, stakeAmount, { from: deployer })
+    let txReceipt1 = await variableDebtmDAI.approve(MASTER_CHEF, stakeAmount, { from: deployer })
     let txReceipt2 = await masterChef.deposit(poolId, stakeAmount, referrer, { from: deployer })
     console.log('=== txReceipt (deposit method of the Polycat.finance) ===', txReceipt2)
 }
