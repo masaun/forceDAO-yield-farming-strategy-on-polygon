@@ -2,7 +2,7 @@ module.exports = {
     "Polygon Mainnet": {
     },
     "Polygon Mumbai": {
-        "Aave": {
+        "AAVE": {
             "variableDebtmDAI": "0x6D29322ba6549B95e98E9B08033F5ffb857f19c5"
         },
         "Polycat": {

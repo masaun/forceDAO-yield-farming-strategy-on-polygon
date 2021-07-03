@@ -27,6 +27,7 @@ const ILendingPool = artifacts.require("ILendingPool")
 const LENDING_POOL_ADDRESSES_PROVIDER = contractAddressList["Polygon Mumbai"]["AAVE"]["LendingPoolAddressesProvider"]
 const LENDING_POOL = contractAddressList["Polygon Mumbai"]["AAVE"]["LendingPool"]
 const DAI_TOKEN = tokenAddressList["Polygon Mumbai"]["ERC20"]["DAI"]
+const VARIABLE_DEBT_MDAI_TOKEN = tokenAddressList["Polygon Mumbai"]["AAVE"]["variableDebtmDAI"]  /// [Note]: Aave Matic Market variable debt mDAI
 
 /// Deployed-addresses on Polygon Mumbai ([Todo]: Finally, it will be replaced with contractAddressList/tokenAddressList)
 const YIELD_FARMING_STRATEGY = YieldFarmingStrategy.address
@@ -203,7 +204,7 @@ async function addToPolycatPool() {
             
     /// [Note]: 1 FISH (1e18) tokens created per block
     const allocPoint = "100"
-    const lpToken = DAI_TOKEN   /// [Note]: Using ERC20 Token (DAI) as a single staking pool
+    const lpToken = VARIABLE_DEBT_MDAI_TOKEN   /// [Note]: Using ERC20 Token (AAVE Variable Debt mDAI) as a single staking pool
     const depositFeeBP = 4      /// [Note]: Deposit Fee == 4%
     let txReceipt = await masterChef.add(allocPoint, lpToken, depositFeeBP, { from: deployer })
     console.log('=== txReceipt (add method of the Polycat.finance) ===', txReceipt)
