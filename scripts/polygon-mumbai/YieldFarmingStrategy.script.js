@@ -62,7 +62,7 @@ let deployer
 /// [Note]: For truffle exec (Remarks: Need to use module.exports)
 module.exports = function(callback) {
     main().then(() => callback()).catch(err => callback(err))
-};
+}
 
 async function main() {
     console.log("\n------------- Set wallet addresses -------------")
@@ -164,7 +164,7 @@ async function getLpTokenListOfEachPools() {
 ///-------------------------------------
 async function lendToAave() {
     const asset = DAI_TOKEN         /// @notice - address of the underlying asset
-    const amount = toWei("10")      /// 10 DAI
+    const amount = toWei("100")      /// 100 DAI
     // const onBehalfOf = deployer  /// @notice - address whom will receive the aTokens. 
     // const referralCode = 0       /// @notice - Use 0 for no referral.
 
@@ -192,7 +192,7 @@ async function collateralizeForAave() {
 
 async function borrowFromAave() {
     const asset = DAI_TOKEN         /// @notice - address of the underlying asset
-    const amount = toWei("5")       /// 5 DAI (Note: It's possible to borrow DAI until 60% of total collateralized-asset. In this case, 10 DAI is already collateralized. Therefore, It's possible to borrow until 6 DAI)
+    const amount = toWei("50")      /// 50 DAI (Note: It's possible to borrow DAI until 60% of total collateralized-asset. In this case, 100 DAI is already collateralized. Therefore, It's possible to borrow until 6 DAI)
     const interestRateMode = 2      /// @notice - the type of borrow debt. Stable: 1, Variable: 2
     const referralCode = 0
     const onBehalfOf = deployer
@@ -231,17 +231,17 @@ async function depositToPolycatPool() {
     console.log("deposit() - User1 stake 10 DAI at block 310")
     /// [Note]: Block to mint the FishToken start from block 300.
     /// User1 stake (deposit) 10 DAI tokens at block 310.
-    const poolId = 0                /// Pool ID = 0 is the Pool for the DAI
-    const stakeAmount = toWei('1')  /// 1 DAI
+    const poolId = 0                 /// Pool ID = 0 is the Pool for the DAI
+    const stakeAmount = toWei('10')  /// 10 DAI
     const referrer = constants.ZERO_ADDRESS
 
     /// [Test]: Using masterChef.deposit() directly
-    let txReceipt1 = await daiToken.approve(MASTER_CHEF, stakeAmount, { from: deployer })
-    let txReceipt2 = await masterChef.deposit(poolId, stakeAmount, referrer, { from: deployer })
+    //let txReceipt1 = await daiToken.approve(MASTER_CHEF, stakeAmount, { from: deployer })
+    //let txReceipt2 = await masterChef.deposit(poolId, stakeAmount, referrer, { from: deployer })
 
     /// [Actual code]: Using yieldFarmingStrategy.lendIntoPolycatPool()
     //let txReceipt1 = await daiToken.approve(YIELD_FARMING_STRATEGY, stakeAmount, { from: deployer })
-    //let txReceipt2 = await yieldFarmingStrategy.lendIntoPolycatPool(DAI_TOKEN, poolId, stakeAmount, referrer, { from: deployer })
+    let txReceipt2 = await yieldFarmingStrategy.lendIntoPolycatPool(DAI_TOKEN, poolId, stakeAmount, referrer, { from: deployer })
     console.log('=== txReceipt (deposit method of the Polycat.finance) ===', txReceipt2)
 }
 
