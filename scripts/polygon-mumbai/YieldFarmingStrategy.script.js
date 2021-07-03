@@ -221,6 +221,7 @@ async function addToPolycatPool() {
     let lpTokenListOfEachPools = getLpTokenListOfEachPools()
 
     /// @notice - Only case that there is no pool which has ERC20 token assigned, add() method is executed.
+    /// @notice - If the Pool for ERC20 token assigned already exist, add() method below is skipped
     for (poolId = 0; poolId < lpTokenListOfEachPools.length; ++poolId) {
         if (lpTokenListOfEachPools[poolId] != VARIABLE_DEBT_MDAI_TOKEN) {
             console.log("add() - Add a new ERC20 Token (DAI) Pool as a target")
@@ -242,8 +243,8 @@ async function depositToPolycatPool() {
     console.log("deposit() - User1 stake 10 DAI at block 310")
     /// [Note]: Block to mint the FishToken start from block 300.
     /// User1 stake (deposit) 10 DAI tokens at block 310.
-    const poolId = 0
-    const stakeAmount = toWei('10')  /// 10 DAI
+    const poolId = 1                 /// Pool ID = 1 is the Pool for the AAVE Variable Debt mDAI
+    const stakeAmount = toWei('10')  /// 10 AAVE Variable Debt mDAI
     const referrer = constants.ZERO_ADDRESS
 
     let txReceipt1 = await variableDebtmDAI.approve(MASTER_CHEF, stakeAmount, { from: deployer })
