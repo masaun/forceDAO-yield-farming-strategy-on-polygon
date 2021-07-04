@@ -1,5 +1,6 @@
 // SPDX-License-Identifier: agpl-3.0
 pragma solidity 0.6.12;
+pragma experimental ABIEncoderV2;
 
 import { YieldFarmingStrategyCommons } from "./commons/yield-farming-strategy/YieldFarmingStrategyCommons.sol";
 
@@ -55,7 +56,7 @@ contract YieldFarmingStrategy is YieldFarmingStrategyCommons {
         lendingPool.deposit(asset, amount, onBehalfOf, referralCode);
 
         // Save the record of lending to the AAVE market
-        _saveRecordOfLendingToAaveMarket(asset, amount);
+        _saveRecordOfLendingToAaveMarket(msg.sender, asset, amount);
     }
 
     /**
@@ -81,11 +82,17 @@ contract YieldFarmingStrategy is YieldFarmingStrategyCommons {
         uint16 referralCode = 0;
         address onBehalfOf = address(this);
 
+        /// Check whether borrowing amount is higher than 60% of amount lended or not
+        UserForAaveMarket memory userForAaveMarket = getUserForAaveMarket(asset, msg.sender);
+        uint _borrowingAmount = userForAaveMarket.borrowingAmount;
+        uint borrowingLimitAmount = userForAaveMarket.lendingAmount.mul(60).div(100);  /// [Note]: A user can borrow until 60% of amount lended
+        require(_borrowingAmount <= borrowingLimitAmount, "Borrowing amount must be smaller than 60% of amount lended");
+
         /// Borrow method call
         lendingPool.borrow(asset, amount, interestRateMode, referralCode, onBehalfOf);
 
         // Save the record of borrowing to the AAVE market
-        _saveRecordOfBorrowingFromAaveMarket(asset, amount);
+        _saveRecordOfBorrowingFromAaveMarket(msg.sender, asset, amount);
     }
 
     /**
@@ -99,25 +106,39 @@ contract YieldFarmingStrategy is YieldFarmingStrategyCommons {
         masterChef.deposit(poolId, stakeAmount, referrer);
 
         // Save the record of borrowing to the AAVE market
-        _saveRecordOfDepositingToPolycatPool(poolId, stakeAmount);
+        _saveRecordOfDepositingToPolycatPool(msg.sender, poolId, stakeAmount);
     }
 
 
     ///--------------------------------------------------
     /// Save records of lending, borrowing, depositing 
     ///--------------------------------------------------
-    function _saveRecordOfLendingToAaveMarket(address asset, uint256 amount) internal returns (bool) {
-        UserForAaveMarket storage userForAaveMarket = userForAaveMarkets[asset][msg.sender];
+    function _saveRecordOfLendingToAaveMarket(address lender, address asset, uint256 amount) internal returns (bool) {
+        UserForAaveMarket storage userForAaveMarket = userForAaveMarkets[asset][lender];
         userForAaveMarket.lendingAmount = userForAaveMarket.lendingAmount.add(amount);
     }
 
-    function _saveRecordOfBorrowingFromAaveMarket(address asset, uint256 amount) internal returns (bool) {
-        UserForAaveMarket storage userForAaveMarket = userForAaveMarkets[asset][msg.sender];
+    function _saveRecordOfBorrowingFromAaveMarket(address borrower, address asset, uint256 amount) internal returns (bool) {
+        UserForAaveMarket storage userForAaveMarket = userForAaveMarkets[asset][borrower];
         userForAaveMarket.borrowingAmount = userForAaveMarket.borrowingAmount.add(amount);
     }
 
-    function _saveRecordOfDepositingToPolycatPool(uint256 poolId, uint256 stakeAmount) internal returns (bool) {
-        UserForPolycatPool storage userForPolycatPool = userForPolycatPools[poolId][msg.sender];
+    function _saveRecordOfDepositingToPolycatPool(address depositor, uint256 poolId, uint256 stakeAmount) internal returns (bool) {
+        UserForPolycatPool storage userForPolycatPool = userForPolycatPools[poolId][depositor];
         userForPolycatPool.depositingAmount = userForPolycatPool.depositingAmount.add(stakeAmount);
+    }
+
+
+    ///--------------------------------------------------
+    /// Getter methods
+    ///--------------------------------------------------
+    function getUserForAaveMarket(address asset, address user) public view returns (UserForAaveMarket memory _userForAaveMarket) {
+        UserForAaveMarket memory userForAaveMarket = userForAaveMarkets[asset][user];
+        return userForAaveMarket;
+    }
+
+    function getUserForPolycatPool(uint poolId, address user) public view returns (UserForPolycatPool memory _userForPolycatPool) {
+        UserForPolycatPool memory userForPolycatPool = userForPolycatPools[poolId][user];
+        return userForPolycatPool;
     }
 }
