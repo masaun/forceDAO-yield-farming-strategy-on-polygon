@@ -1,6 +1,9 @@
 // SPDX-License-Identifier: agpl-3.0
 pragma solidity 0.6.12;
 
+import { YieldFarmingStrategyCommons } from "./commons/yield-farming-strategy/YieldFarmingStrategyCommons.sol";
+
+// Open Zeppelin
 import { IERC20 } from "@openzeppelin/contracts/token/ERC20/IERC20.sol";
 
 // AAVE
@@ -13,7 +16,13 @@ import { MasterChef } from "./polycat/Farm/MasterChef.sol";
 /**
  * @title YieldFarmingStrategy contract
  */
-contract YieldFarmingStrategy {
+contract YieldFarmingStrategy is YieldFarmingStrategyCommons {
+
+    // Info of each user.
+    struct UserInfo {
+        uint256 amount;         // How many LP tokens the user has provided.
+        uint256 rewardDebt;     // Reward debt. See explanation below.
+    }
 
     IERC20 public dai;
     ILendingPoolAddressesProvider public provider;
@@ -82,9 +91,9 @@ contract YieldFarmingStrategy {
     }
 
     /**
-     * @notice - Lend (Deposit) ERC20 tokens into the Polycat Pool
+     * @notice - Deposit ERC20 tokens into the Polycat Pool
      */ 
-    function lendIntoPolycatPool(address asset, uint256 poolId, uint256 stakeAmount, address referrer) public returns (bool) {
+    function depositIntoPolycatPool(address asset, uint256 poolId, uint256 stakeAmount, address referrer) public returns (bool) {
         // Approve the MasterChef contract to move your DAI
         IERC20(asset).approve(MASTER_CHEF, stakeAmount);
 
