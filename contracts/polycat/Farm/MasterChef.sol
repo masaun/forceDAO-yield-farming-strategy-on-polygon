@@ -43,7 +43,7 @@ contract MasterChef is Ownable, ReentrancyGuard {
         IERC20 lpToken;           // Address of LP token contract.
         uint256 allocPoint;       // How many allocation points assigned to this pool. FISHes to distribute per block.
         uint256 lastRewardBlock;  // Last block number that FISHes distribution occurs.
-        uint256 accFishPerShare;   // Accumulated FISHes per share, times 1e18. See below.
+        uint256 accFishPerShare;  // Accumulated FISHes per share, times 1e18. See below.
         uint16 depositFeeBP;      // Deposit fee in basis points
     }
 
