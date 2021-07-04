@@ -5,6 +5,7 @@ import { YieldFarmingStrategyCommons } from "./commons/yield-farming-strategy/Yi
 
 // Open Zeppelin
 import { IERC20 } from "@openzeppelin/contracts/token/ERC20/IERC20.sol";
+import { SafeMath } from "@openzeppelin/contracts/math/SafeMath.sol";
 
 // AAVE
 import { ILendingPool } from './aave-v2/interfaces/ILendingPool.sol';
@@ -17,12 +18,7 @@ import { MasterChef } from "./polycat/Farm/MasterChef.sol";
  * @title YieldFarmingStrategy contract
  */
 contract YieldFarmingStrategy is YieldFarmingStrategyCommons {
-
-    // Info of each user.
-    struct UserInfo {
-        uint256 amount;         // How many LP tokens the user has provided.
-        uint256 rewardDebt;     // Reward debt. See explanation below.
-    }
+    using SafeMath for uint256;
 
     ILendingPoolAddressesProvider public provider;
     ILendingPool public lendingPool;
@@ -57,6 +53,9 @@ contract YieldFarmingStrategy is YieldFarmingStrategyCommons {
 
         // Deposit 10 DAI
         lendingPool.deposit(asset, amount, onBehalfOf, referralCode);
+
+        // Save the record of lending to the AAVE market
+        _saveRecordOfLendingToAaveMarket(asset, amount);
     }
 
     /**
@@ -84,16 +83,41 @@ contract YieldFarmingStrategy is YieldFarmingStrategyCommons {
 
         /// Borrow method call
         lendingPool.borrow(asset, amount, interestRateMode, referralCode, onBehalfOf);
+
+        // Save the record of borrowing to the AAVE market
+        _saveRecordOfBorrowingFromAaveMarket(asset, amount);
     }
 
     /**
      * @notice - Deposit ERC20 tokens into the Polycat Pool
      */ 
-    function depositIntoPolycatPool(address asset, uint256 poolId, uint256 stakeAmount, address referrer) public returns (bool) {
+    function depositToPolycatPool(address asset, uint256 poolId, uint256 stakeAmount, address referrer) public returns (bool) {
         // Approve the MasterChef contract to move your DAI
         IERC20(asset).approve(MASTER_CHEF, stakeAmount);
 
+        // Deposit into the MasterChef contract of Polycat.finance
         masterChef.deposit(poolId, stakeAmount, referrer);
+
+        // Save the record of borrowing to the AAVE market
+        _saveRecordOfDepositingToPolycatPool(poolId, stakeAmount);
     }
 
+
+    ///--------------------------------------------------
+    /// Save records of lending, borrowing, depositing 
+    ///--------------------------------------------------
+    function _saveRecordOfLendingToAaveMarket(address asset, uint256 amount) internal returns (bool) {
+        UserForAaveMarket storage userForAaveMarket = userForAaveMarkets[asset][msg.sender];
+        userForAaveMarket.lendingAmount = userForAaveMarket.lendingAmount.add(amount);
+    }
+
+    function _saveRecordOfBorrowingFromAaveMarket(address asset, uint256 amount) internal returns (bool) {
+        UserForAaveMarket storage userForAaveMarket = userForAaveMarkets[asset][msg.sender];
+        userForAaveMarket.borrowingAmount = userForAaveMarket.borrowingAmount.add(amount);
+    }
+
+    function _saveRecordOfDepositingToPolycatPool(uint256 poolId, uint256 stakeAmount) internal returns (bool) {
+        UserForPolycatPool storage userForPolycatPool = userForPolycatPools[poolId][msg.sender];
+        userForPolycatPool.depositingAmount = userForPolycatPool.depositingAmount.add(stakeAmount);
+    }
 }

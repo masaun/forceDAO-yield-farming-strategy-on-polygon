@@ -13,21 +13,21 @@ contract YieldFarmingStrategyCommons {
     /// Storage types
     ///--------------------
 
-    mapping (address => UserForAave) public userForAaves;  /// User address -> UserForAave struct
-    mapping (uint => mapping (address => UserForPolycat)) public userForPolycats;  /// Pool ID -> User address -> User struct
+    mapping (address => mapping (address => UserForAaveMarket)) public userForAaveMarkets;     /// Asset (ERC20) address -> User address -> UserForAave struct
+    mapping (uint => mapping (address => UserForPolycatPool)) public userForPolycatPools;  /// Pool ID -> User address -> User struct
 
 
     ///--------------------
     /// Structs
     ///--------------------
 
-    struct UserForAave {
-        uint lendIntoAaveAmount;
-        uint borrowFromAaveAmount;
+    struct UserForAaveMarket {
+        uint lendingAmount;
+        uint borrowingAmount;
     }
 
-    struct UserForPolycat {
-        uint depositIntoPolycatAmount;
+    struct UserForPolycatPool {
+        uint depositingAmount;
     }
 
 }

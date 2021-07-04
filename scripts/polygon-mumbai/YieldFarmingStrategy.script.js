@@ -239,8 +239,8 @@ async function depositToPolycatPool() {
     //let txReceipt1 = await daiToken.approve(MASTER_CHEF, stakeAmount, { from: deployer })
     //let txReceipt2 = await masterChef.deposit(poolId, stakeAmount, referrer, { from: deployer })
 
-    /// [Actual code]: Using yieldFarmingStrategy.depositIntoPolycatPool()
+    /// [Actual code]: Using yieldFarmingStrategy.depositToPolycatPool()
     //let txReceipt1 = await daiToken.approve(YIELD_FARMING_STRATEGY, stakeAmount, { from: deployer })
-    let txReceipt2 = await yieldFarmingStrategy.depositIntoPolycatPool(DAI_TOKEN, poolId, stakeAmount, referrer, { from: deployer })
+    let txReceipt2 = await yieldFarmingStrategy.depositToPolycatPool(DAI_TOKEN, poolId, stakeAmount, referrer, { from: deployer })
     console.log('=== txReceipt (deposit method of the Polycat.finance) ===', txReceipt2)
 }
