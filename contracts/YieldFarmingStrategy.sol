@@ -1,5 +1,6 @@
 // SPDX-License-Identifier: agpl-3.0
 pragma solidity 0.6.12;
+pragma experimental ABIEncoderV2;
 
 import { YieldFarmingStrategyCommons } from "./commons/yield-farming-strategy/YieldFarmingStrategyCommons.sol";
 
@@ -119,5 +120,19 @@ contract YieldFarmingStrategy is YieldFarmingStrategyCommons {
     function _saveRecordOfDepositingToPolycatPool(address depositor, uint256 poolId, uint256 stakeAmount) internal returns (bool) {
         UserForPolycatPool storage userForPolycatPool = userForPolycatPools[poolId][depositor];
         userForPolycatPool.depositingAmount = userForPolycatPool.depositingAmount.add(stakeAmount);
+    }
+
+
+    ///--------------------------------------------------
+    /// Getter methods
+    ///--------------------------------------------------
+    function getUserForAaveMarket(address asset, address user) public view returns (UserForAaveMarket memory _userForAaveMarket) {
+        UserForAaveMarket memory userForAaveMarket = userForAaveMarkets[asset][user];
+        return userForAaveMarket;
+    }
+
+    function getUserForPolycatPool(uint poolId, address user) public view returns (UserForPolycatPool memory _userForPolycatPool) {
+        UserForPolycatPool memory userForPolycatPool = userForPolycatPools[poolId][user];
+        return userForPolycatPool;
     }
 }
