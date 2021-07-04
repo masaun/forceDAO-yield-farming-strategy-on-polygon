@@ -55,7 +55,7 @@ contract YieldFarmingStrategy is YieldFarmingStrategyCommons {
         lendingPool.deposit(asset, amount, onBehalfOf, referralCode);
 
         // Save the record of lending to the AAVE market
-        _saveRecordOfLendingToAaveMarket(asset, amount);
+        _saveRecordOfLendingToAaveMarket(msg.sender, asset, amount);
     }
 
     /**
@@ -85,7 +85,7 @@ contract YieldFarmingStrategy is YieldFarmingStrategyCommons {
         lendingPool.borrow(asset, amount, interestRateMode, referralCode, onBehalfOf);
 
         // Save the record of borrowing to the AAVE market
-        _saveRecordOfBorrowingFromAaveMarket(asset, amount);
+        _saveRecordOfBorrowingFromAaveMarket(msg.sender, asset, amount);
     }
 
     /**
@@ -99,25 +99,25 @@ contract YieldFarmingStrategy is YieldFarmingStrategyCommons {
         masterChef.deposit(poolId, stakeAmount, referrer);
 
         // Save the record of borrowing to the AAVE market
-        _saveRecordOfDepositingToPolycatPool(poolId, stakeAmount);
+        _saveRecordOfDepositingToPolycatPool(msg.sender, poolId, stakeAmount);
     }
 
 
     ///--------------------------------------------------
     /// Save records of lending, borrowing, depositing 
     ///--------------------------------------------------
-    function _saveRecordOfLendingToAaveMarket(address asset, uint256 amount) internal returns (bool) {
-        UserForAaveMarket storage userForAaveMarket = userForAaveMarkets[asset][msg.sender];
+    function _saveRecordOfLendingToAaveMarket(address lender, address asset, uint256 amount) internal returns (bool) {
+        UserForAaveMarket storage userForAaveMarket = userForAaveMarkets[asset][lender];
         userForAaveMarket.lendingAmount = userForAaveMarket.lendingAmount.add(amount);
     }
 
-    function _saveRecordOfBorrowingFromAaveMarket(address asset, uint256 amount) internal returns (bool) {
-        UserForAaveMarket storage userForAaveMarket = userForAaveMarkets[asset][msg.sender];
+    function _saveRecordOfBorrowingFromAaveMarket(address borrower, address asset, uint256 amount) internal returns (bool) {
+        UserForAaveMarket storage userForAaveMarket = userForAaveMarkets[asset][borrower];
         userForAaveMarket.borrowingAmount = userForAaveMarket.borrowingAmount.add(amount);
     }
 
-    function _saveRecordOfDepositingToPolycatPool(uint256 poolId, uint256 stakeAmount) internal returns (bool) {
-        UserForPolycatPool storage userForPolycatPool = userForPolycatPools[poolId][msg.sender];
+    function _saveRecordOfDepositingToPolycatPool(address depositor, uint256 poolId, uint256 stakeAmount) internal returns (bool) {
+        UserForPolycatPool storage userForPolycatPool = userForPolycatPools[poolId][depositor];
         userForPolycatPool.depositingAmount = userForPolycatPool.depositingAmount.add(stakeAmount);
     }
 }
