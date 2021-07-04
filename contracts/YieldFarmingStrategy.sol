@@ -24,23 +24,19 @@ contract YieldFarmingStrategy is YieldFarmingStrategyCommons {
         uint256 rewardDebt;     // Reward debt. See explanation below.
     }
 
-    IERC20 public dai;
     ILendingPoolAddressesProvider public provider;
     ILendingPool public lendingPool;
     MasterChef public masterChef;
 
     address LENDING_POOL;
-    address DAI_ADDRESS;
     address MASTER_CHEF;
 
-    constructor(ILendingPoolAddressesProvider _provider, MasterChef _masterChef, IERC20 _dai) public {
-        dai = _dai;
+    constructor(ILendingPoolAddressesProvider _provider, MasterChef _masterChef) public {
         provider = _provider;
         lendingPool = ILendingPool(provider.getLendingPool());
         masterChef = _masterChef;
 
         LENDING_POOL = provider.getLendingPool();
-        DAI_ADDRESS = address(dai);
         MASTER_CHEF = address(masterChef);
     }
 
@@ -48,7 +44,7 @@ contract YieldFarmingStrategy is YieldFarmingStrategyCommons {
      * @notice - Lend ERC20 token into the AAVE Lending Market
      */
     function lendToAave(address asset, uint256 amount) public returns (bool) {
-        dai.transferFrom(msg.sender, address(this), amount);
+        IERC20(asset).transferFrom(msg.sender, address(this), amount);
 
         // Input variables
         //address asset = DAI_ADDRESS;
@@ -57,7 +53,7 @@ contract YieldFarmingStrategy is YieldFarmingStrategyCommons {
         uint16 referralCode = 0;
 
         // Approve LendingPool contract to move your DAI
-        dai.approve(LENDING_POOL, amount);
+        IERC20(asset).approve(LENDING_POOL, amount);
 
         // Deposit 10 DAI
         lendingPool.deposit(asset, amount, onBehalfOf, referralCode);
