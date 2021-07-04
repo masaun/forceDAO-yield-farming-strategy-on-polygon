@@ -82,6 +82,12 @@ contract YieldFarmingStrategy is YieldFarmingStrategyCommons {
         uint16 referralCode = 0;
         address onBehalfOf = address(this);
 
+        /// Check whether borrowing amount is higher than 60% of amount lended or not
+        UserForAaveMarket memory userForAaveMarket = getUserForAaveMarket(asset, msg.sender);
+        uint _borrowingAmount = userForAaveMarket.borrowingAmount;
+        uint borrowingLimitAmount = userForAaveMarket.lendingAmount.mul(60).div(100);  /// [Note]: A user can borrow until 60% of amount lended
+        require(_borrowingAmount <= borrowingLimitAmount, "Borrowing amount must be smaller than 60% of amount lended");
+
         /// Borrow method call
         lendingPool.borrow(asset, amount, interestRateMode, referralCode, onBehalfOf);
 
