@@ -14,7 +14,7 @@ contract YieldFarmingStrategyCommons {
     ///--------------------
 
     mapping (address => UserForAave) public userForAaves;  /// User address -> UserForAave struct
-    mapping (address => UserForPolycat) public userForPolycats;  /// Pool ID -> User address -> User struct
+    mapping (uint => mapping (address => UserForPolycat)) public userForPolycats;  /// Pool ID -> User address -> User struct
 
 
     ///--------------------
@@ -27,7 +27,7 @@ contract YieldFarmingStrategyCommons {
     }
 
     struct UserForPolycat {
-        uint lendIntoPolycatAmount;
+        uint depositIntoPolycatAmount;
     }
 
 }
