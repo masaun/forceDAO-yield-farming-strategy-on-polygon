@@ -135,7 +135,7 @@ contract MasterChef is Ownable, ReentrancyGuard {
         return _to.sub(_from);
     }
 
-    // View function to see pending FISHes on frontend.
+    // View function to see pending $FISH tokens on frontend.
     function pendingFish(uint256 _pid, address _user) external view returns (uint256) {
         PoolInfo storage pool = poolInfo[_pid];
         UserInfo storage user = userInfo[_pid][_user];

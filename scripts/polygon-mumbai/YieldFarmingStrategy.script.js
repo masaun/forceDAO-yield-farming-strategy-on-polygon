@@ -72,7 +72,7 @@ async function main() {
     await DeploySmartContracts()
     //await getLpTokenListOfEachPools()
 
-    console.log("\n------------- Workflow of AAVE-------------")
+    console.log("\n------------- Workflow of AAVE -------------")
     await lendToAave()
     await collateralizeForAave()
     await borrowFromAave()
@@ -218,7 +218,7 @@ async function addToPolycatPool() {
     /// @notice - If the Pool for ERC20 token assigned has not already existed, add() method below is executed.
     if (lpTokenListOfEachPools.indexOf(DAI_TOKEN) == -1) {
         console.log("add() - Add a new ERC20 Token (DAI) Pool as a target")
-        /// [Note]: 1 FISH (1e18) tokens created per block
+        /// [Note]: 1 FISH (1e18) tokens are created per block
         const allocPoint = "100"
         const lpToken = DAI_TOKEN   /// [Note]: Using ERC20 Token (DAI) as a single staking pool
         const depositFeeBP = 4      /// [Note]: Deposit Fee == 4%
@@ -243,4 +243,13 @@ async function depositToPolycatPool() {
     //let txReceipt1 = await daiToken.approve(YIELD_FARMING_STRATEGY, stakeAmount, { from: deployer })
     let txReceipt2 = await yieldFarmingStrategy.depositToPolycatPool(DAI_TOKEN, poolId, stakeAmount, referrer, { from: deployer })
     console.log('=== txReceipt (deposit method of the Polycat.finance) ===', txReceipt2)
+}
+
+
+///-----------------------------------
+/// Check each amount harvested
+///-----------------------------------
+
+async function harvestedAmount() {
+
 }
