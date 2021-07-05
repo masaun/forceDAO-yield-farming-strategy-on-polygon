@@ -11,6 +11,7 @@ import { SafeMath } from "@openzeppelin/contracts/math/SafeMath.sol";
 // AAVE
 import { ILendingPool } from './aave-v2/interfaces/ILendingPool.sol';
 import { ILendingPoolAddressesProvider } from './aave-v2/interfaces/ILendingPoolAddressesProvider.sol';
+import { IAaveIncentivesController } from "./aave-v2/interfaces/IAaveIncentivesController.sol";
 
 // Polycat.finanace
 import { MasterChef } from "./polycat/Farm/MasterChef.sol";
@@ -25,10 +26,12 @@ contract YieldFarmingStrategyFactory {
     event YieldFarmingStrategyCreated(address indexed strategyOwner, YieldFarmingStrategy indexed yieldFarmingStrategy);
 
     ILendingPoolAddressesProvider public provider;
+    IAaveIncentivesController public incentivesController;
     MasterChef public masterChef;
 
-    constructor(ILendingPoolAddressesProvider _provider, MasterChef _masterChef) public {
+    constructor(ILendingPoolAddressesProvider _provider, IAaveIncentivesController _incentivesController, MasterChef _masterChef) public {
         provider = _provider;
+        incentivesController = _incentivesController;
         masterChef = _masterChef;
     }
 
@@ -36,7 +39,7 @@ contract YieldFarmingStrategyFactory {
      * @notice - Create a new YieldFarmingStrategy contract
      */
     function createNewYieldFarmingStrategy() public returns (bool) {
-        YieldFarmingStrategy yieldFarmingStrategy = new YieldFarmingStrategy(provider, masterChef, msg.sender);
+        YieldFarmingStrategy yieldFarmingStrategy = new YieldFarmingStrategy(provider, incentivesController, masterChef, msg.sender);
         address YIELD_FARMING_STRATEGY = address(yieldFarmingStrategy);
 
         // Save a YieldFarmingStrategy created into the list of all YieldFarmingStrategies

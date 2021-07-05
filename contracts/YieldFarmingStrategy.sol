@@ -164,12 +164,12 @@ contract YieldFarmingStrategy is YieldFarmingStrategyCommons {
         return userForPolycatPool;
     }
 
-    //@notice - Get pending reward tokens (FishTokens) amount of the Polycat.finance
+    // @notice - Get pending reward tokens (FishTokens) amount of the Polycat.finance
     function getPendingFish(uint poolId) external view returns (uint _pendingFish) {
         return masterChef.pendingFish(poolId, address(this));
     }
 
-    //@notice - Get rewards balance of the AAVE
+    // @notice - Get rewards balance of the AAVE
     function getAaveRewardsBalance(address[] memory assets) external view returns (uint _rewardsBalance) {
         return incentivesController.getRewardsBalance(assets, address(this));
     }
