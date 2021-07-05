@@ -174,6 +174,11 @@ async function getLpTokenListOfEachPools() {
 ///---------------------------------------------
 async function createNewYieldFarmingStrategy() {
     const txReceipt = await yieldFarmingStrategyFactory.createNewYieldFarmingStrategy({ from: deployer })
+
+    /// [Todo]: Retrieve the result the YieldFarmingStrategyCreated event
+    let event = await getEvents(yieldFarmingStrategyFactory, "YieldFarmingStrategyCreated")
+    YIELD_FARMING_STRATEGY = event.yieldFarmingStrategy
+    yieldFarmingStrategy = await YieldFarmingStrategy.at(YIELD_FARMING_STRATEGY)
 }
 
 
