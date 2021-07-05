@@ -14,9 +14,10 @@ const MASTER_CHEF = MasterChef.address
 
 /// Deployed-addresses on Polygon Mumbai
 const LENDING_POOL_ADDRESSES_PROVIDER = contractAddressList["Polygon Mumbai"]["AAVE"]["LendingPoolAddressesProvider"]
+const INCENTIVES_CONTROLLER = contractAddressList["Polygon Mumbai"]["AAVE"]["IncentivesController"]
 //const DAI_TOKEN = tokenAddressList["Polygon Mumbai"]["ERC20"]["DAI"]
 
 
 module.exports = async function(deployer) {
-    await deployer.deploy(YieldFarmingStrategyFactory, LENDING_POOL_ADDRESSES_PROVIDER, MASTER_CHEF)
+    await deployer.deploy(YieldFarmingStrategyFactory, LENDING_POOL_ADDRESSES_PROVIDER, INCENTIVES_CONTROLLER, MASTER_CHEF)
 };
