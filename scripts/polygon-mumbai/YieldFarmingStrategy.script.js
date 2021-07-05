@@ -17,6 +17,7 @@ const contractAddressList = require("../../migrations/addressesList/contractAddr
 const tokenAddressList = require("../../migrations/addressesList/tokenAddress/tokenAddress.js")
 
 /// Artifact of smart contracts 
+const YieldFarmingStrategyFactory = artifacts.require("YieldFarmingStrategyFactory")
 const YieldFarmingStrategy = artifacts.require("YieldFarmingStrategy")
 const MasterChef = artifacts.require("MasterChef")
 const FishToken = artifacts.require("FishToken")
@@ -30,7 +31,8 @@ const DAI_TOKEN = tokenAddressList["Polygon Mumbai"]["ERC20"]["DAI"]
 const VARIABLE_DEBT_MDAI_TOKEN = tokenAddressList["Polygon Mumbai"]["AAVE"]["variableDebtmDAI"]  /// [Note]: Aave Matic Market variable debt mDAI
 
 /// Deployed-addresses on Polygon Mumbai ([Todo]: Finally, it will be replaced with contractAddressList/tokenAddressList)
-const YIELD_FARMING_STRATEGY = YieldFarmingStrategy.address
+const YIELD_FARMING_STRATEGY_FACTORY = YieldFarmingStrategyFactory.address
+const YIELD_FARMING_STRATEGY
 const FISH_TOKEN = FishToken.address
 const MASTER_CHEF = MasterChef.address
 // const YIELD_FARMING_STRATEGY = contractAddressList["Polygon Mumbai"]["YieldFarmingStrategy"]["YieldFarmingStrategy"]
@@ -38,6 +40,7 @@ const MASTER_CHEF = MasterChef.address
 // const MASTER_CHEF = contractAddressList["Polygon Mumbai"]["Polycat"]["MasterChef"]
 
 /// Global contract instance
+let yieldFarmingStrategyFactory
 let yieldFarmingStrategy
 let daiToken
 let variableDebtmDAI   /// [Note]: Aave Matic Market variable debt mDAI
@@ -108,8 +111,11 @@ async function DeploySmartContracts() {
     console.log("Create the MasterChef contract instance")
     masterChef = await MasterChef.at(MASTER_CHEF)
 
-    console.log("Create the YieldFarmingStrategy contract instance")
-    yieldFarmingStrategy = await YieldFarmingStrategy.at(YIELD_FARMING_STRATEGY)
+    //console.log("Create the YieldFarmingStrategy contract instance")
+    //yieldFarmingStrategy = await YieldFarmingStrategy.at(YIELD_FARMING_STRATEGY)
+
+    console.log("Create the YieldFarmingStrategyFactory contract instance")
+    yieldFarmingStrategyFactory = await YieldFarmingStrategyFactory.at(YIELD_FARMING_STRATEGY)
 
     // console.log("Deploy the Fish Token")
     // fishToken = await FishToken.new({ from: deployer })
@@ -135,7 +141,8 @@ async function DeploySmartContracts() {
     console.log('\n=== DAI_TOKEN ===', DAI_TOKEN)
     console.log('\n=== MASTER_CHEF ===', MASTER_CHEF)
     console.log('\n=== LENDING_POOL_ADDRESSES_PROVIDER ===', LENDING_POOL_ADDRESSES_PROVIDER)            
-    console.log('\n=== YIELD_FARMING_STRATEGY ===', YIELD_FARMING_STRATEGY) 
+    //console.log('\n=== YIELD_FARMING_STRATEGY ===', YIELD_FARMING_STRATEGY) 
+    console.log('\n=== YIELD_FARMING_STRATEGY_FACTORY ===', YIELD_FARMING_STRATEGY_FACTORY)
 }
 
 ///------------------------------------------------
@@ -160,7 +167,7 @@ async function getLpTokenListOfEachPools() {
 
 
 ///-------------------------------------
-/// Workflow
+/// Workflow of AAVE
 ///-------------------------------------
 async function lendToAave() {
     const asset = DAI_TOKEN         /// @notice - address of the underlying asset
