@@ -21,6 +21,7 @@ import { MasterChef } from "./polycat/Farm/MasterChef.sol";
 contract YieldFarmingStrategyFactory {
 
     address[] yieldFarmingStrategies;
+    mapping (address => address) public strategyOwners;  /// [Note]: Contract address of the YieldFarmingStrategy.sol -> User address
 
     ILendingPoolAddressesProvider public provider;
     MasterChef public masterChef;
@@ -35,6 +36,12 @@ contract YieldFarmingStrategyFactory {
      */
     function createNewYieldFarmingStrategy() public returns (bool) {
         YieldFarmingStrategy yieldFarmingStrategy = new YieldFarmingStrategy(provider, masterChef);
-        yieldFarmingStrategies.push(address(yieldFarmingStrategy));
+        address YIELD_FARMING_STRATEGY = address(yieldFarmingStrategy);
+
+        // Save a YieldFarmingStrategy created into the list of all YieldFarmingStrategies
+        yieldFarmingStrategies.push(YIELD_FARMING_STRATEGY);
+
+        // Associate a owner (creator) address with a YieldFarmingStrategy created
+        strategyOwners[YIELD_FARMING_STRATEGY] = msg.sender;
     }
 }
