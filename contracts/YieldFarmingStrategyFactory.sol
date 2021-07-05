@@ -35,7 +35,7 @@ contract YieldFarmingStrategyFactory {
      * @notice - Create a new YieldFarmingStrategy contract
      */
     function createNewYieldFarmingStrategy() public returns (bool) {
-        YieldFarmingStrategy yieldFarmingStrategy = new YieldFarmingStrategy(provider, masterChef);
+        YieldFarmingStrategy yieldFarmingStrategy = new YieldFarmingStrategy(provider, masterChef, msg.sender);
         address YIELD_FARMING_STRATEGY = address(yieldFarmingStrategy);
 
         // Save a YieldFarmingStrategy created into the list of all YieldFarmingStrategies
