@@ -11,6 +11,7 @@ import { SafeMath } from "@openzeppelin/contracts/math/SafeMath.sol";
 // AAVE
 import { ILendingPool } from './aave-v2/interfaces/ILendingPool.sol';
 import { ILendingPoolAddressesProvider } from './aave-v2/interfaces/ILendingPoolAddressesProvider.sol';
+import { IAaveIncentivesController } from "./aave-v2/interfaces/IAaveIncentivesController.sol";
 
 // Polycat.finanace
 import { MasterChef } from "./polycat/Farm/MasterChef.sol";
@@ -23,19 +24,28 @@ contract YieldFarmingStrategy is YieldFarmingStrategyCommons {
 
     ILendingPoolAddressesProvider public provider;
     ILendingPool public lendingPool;
+    IAaveIncentivesController public incentivesController;
     MasterChef public masterChef;
 
     address LENDING_POOL;
+    address INCENTIVES_CONTROLLER;
     address MASTER_CHEF;
 
     address STRATEGY_OWNER;
 
-    constructor(ILendingPoolAddressesProvider _provider, MasterChef _masterChef, address _strategyOwner) public {
+    constructor(
+        ILendingPoolAddressesProvider _provider, 
+        IAaveIncentivesController _incentivesController, 
+        MasterChef _masterChef, 
+        address _strategyOwner
+    ) public {
         provider = _provider;
         lendingPool = ILendingPool(provider.getLendingPool());
+        incentivesController = _incentivesController;
         masterChef = _masterChef;
 
         LENDING_POOL = provider.getLendingPool();
+        INCENTIVES_CONTROLLER = address(incentivesController);
         MASTER_CHEF = address(masterChef);
 
         STRATEGY_OWNER = _strategyOwner;
@@ -154,13 +164,14 @@ contract YieldFarmingStrategy is YieldFarmingStrategyCommons {
         return userForPolycatPool;
     }
 
-    //@notice - Get pending reward tokens (FishTokens) amount
+    //@notice - Get pending reward tokens (FishTokens) amount of the Polycat.finance
     function getPendingFish(uint poolId) external view returns (uint _pendingFish) {
         return masterChef.pendingFish(poolId, address(this));
     }
 
-    // function pendingFishToken(uint poolId, address user) external view returns (uint pendingFish) {
-    //     return masterChef.pendingFish(poolId, user);
-    // }
+    //@notice - Get rewards balance of the AAVE
+    function getAaveRewardsBalance(address[] memory assets) external view returns (uint _rewardsBalance) {
+        return incentivesController.getRewardsBalance(assets, address(this));
+    }
 
 }
