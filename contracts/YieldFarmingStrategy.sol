@@ -153,4 +153,14 @@ contract YieldFarmingStrategy is YieldFarmingStrategyCommons {
         UserForPolycatPool memory userForPolycatPool = userForPolycatPools[poolId][user];
         return userForPolycatPool;
     }
+
+    //@notice - Get pending reward tokens (FishTokens) amount
+    function getPendingFish(uint poolId) external view returns (uint _pendingFish) {
+        return masterChef.pendingFish(poolId, address(this));
+    }
+
+    // function pendingFishToken(uint poolId, address user) external view returns (uint pendingFish) {
+    //     return masterChef.pendingFish(poolId, user);
+    // }
+
 }

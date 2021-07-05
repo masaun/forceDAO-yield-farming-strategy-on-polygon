@@ -280,5 +280,5 @@ async function depositToPolycatPool() {
 ///-----------------------------------
 
 async function harvestedAmount() {
-
+    
 }
