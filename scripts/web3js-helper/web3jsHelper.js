@@ -12,13 +12,14 @@ function fromWei(amount) {
 }
 
 async function getEvents(contractInstance, eventName) {
-    const _latestBlock = await time.latestBlock()
+    const _latestBlock = await getCurrentBlock()
     const LATEST_BLOCK = Number(String(_latestBlock))
+    console.log('=== LATEST_BLOCK ===', LATEST_BLOCK)
 
     /// [Note]: Retrieve an event log of eventName (via web3.js v1.0.0)
     let events = await contractInstance.getPastEvents(eventName, {
         filter: {},
-        fromBlock: LATEST_BLOCK,  /// [Note]: The latest block on Mainnet
+        fromBlock: LATEST_BLOCK - 10,  /// [Note]: Check emittied-events from 10 block ago (The latest block - 10)
         //fromBlock: 0,
         toBlock: 'latest'
     })
