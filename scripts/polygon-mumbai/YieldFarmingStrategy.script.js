@@ -12,6 +12,7 @@ const { constants, expectRevert, expectEvent } = require('@openzeppelin/test-hel
 /// web3.js related methods
 const { toWei, fromWei, getEvents, getCurrentBlock, getCurrentTimestamp } = require('../web3js-helper/web3jsHelper')
 
+
 /// Import deployed-addresses
 const contractAddressList = require("../../migrations/addressesList/contractAddress/contractAddress.js")
 const tokenAddressList = require("../../migrations/addressesList/tokenAddress/tokenAddress.js")
@@ -32,12 +33,13 @@ const VARIABLE_DEBT_MDAI_TOKEN = tokenAddressList["Polygon Mumbai"]["AAVE"]["var
 
 /// Deployed-addresses on Polygon Mumbai ([Todo]: Finally, it will be replaced with contractAddressList/tokenAddressList)
 const YIELD_FARMING_STRATEGY_FACTORY = YieldFarmingStrategyFactory.address
-const YIELD_FARMING_STRATEGY
 const FISH_TOKEN = FishToken.address
 const MASTER_CHEF = MasterChef.address
 // const YIELD_FARMING_STRATEGY = contractAddressList["Polygon Mumbai"]["YieldFarmingStrategy"]["YieldFarmingStrategy"]
 // const FISH_TOKEN = tokenAddressList["Polygon Mumbai"]["Polycat"]["FishToken"]
 // const MASTER_CHEF = contractAddressList["Polygon Mumbai"]["Polycat"]["MasterChef"]
+
+let YIELD_FARMING_STRATEGY
 
 /// Global contract instance
 let yieldFarmingStrategyFactory
@@ -118,7 +120,7 @@ async function DeploySmartContracts() {
     //yieldFarmingStrategy = await YieldFarmingStrategy.at(YIELD_FARMING_STRATEGY)
 
     console.log("Create the YieldFarmingStrategyFactory contract instance")
-    yieldFarmingStrategyFactory = await YieldFarmingStrategyFactory.at(YIELD_FARMING_STRATEGY)
+    yieldFarmingStrategyFactory = await YieldFarmingStrategyFactory.at(YIELD_FARMING_STRATEGY_FACTORY)
 
     // console.log("Deploy the Fish Token")
     // fishToken = await FishToken.new({ from: deployer })
@@ -173,12 +175,16 @@ async function getLpTokenListOfEachPools() {
 /// Workflow of YieldFarmingStrategyFactory.sol
 ///---------------------------------------------
 async function createNewYieldFarmingStrategy() {
+    console.log("Create a new YieldFarmingStrategy")
     const txReceipt = await yieldFarmingStrategyFactory.createNewYieldFarmingStrategy({ from: deployer })
+    console.log('=== txReceipt of createNewYieldFarmingStrategy() ===', txReceipt)
 
     /// [Todo]: Retrieve the result the YieldFarmingStrategyCreated event
     let event = await getEvents(yieldFarmingStrategyFactory, "YieldFarmingStrategyCreated")
+
     YIELD_FARMING_STRATEGY = event.yieldFarmingStrategy
     yieldFarmingStrategy = await YieldFarmingStrategy.at(YIELD_FARMING_STRATEGY)
+    console.log('=== YIELD_FARMING_STRATEGY ===', YIELD_FARMING_STRATEGY)
 }
 
 
