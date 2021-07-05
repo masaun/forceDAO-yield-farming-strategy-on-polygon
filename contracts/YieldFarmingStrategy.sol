@@ -28,19 +28,31 @@ contract YieldFarmingStrategy is YieldFarmingStrategyCommons {
     address LENDING_POOL;
     address MASTER_CHEF;
 
-    constructor(ILendingPoolAddressesProvider _provider, MasterChef _masterChef) public {
+    address STRATEGY_OWNER;
+
+    constructor(ILendingPoolAddressesProvider _provider, MasterChef _masterChef, address _strategyOwner) public {
         provider = _provider;
         lendingPool = ILendingPool(provider.getLendingPool());
         masterChef = _masterChef;
 
         LENDING_POOL = provider.getLendingPool();
         MASTER_CHEF = address(masterChef);
+
+        STRATEGY_OWNER = _strategyOwner;
+    }
+
+    /**
+     * @notice - Modify that check whether a caller is a strategy owner or not
+     */
+    modifier onlyStrategyOwner() {
+        require(msg.sender == STRATEGY_OWNER, "YieldFarmingStrategy: Caller must be a strategy owner");
+        _;
     }
 
     /**
      * @notice - Lend ERC20 token into the AAVE Lending Market
      */
-    function lendToAave(address asset, uint256 amount) public returns (bool) {
+    function lendToAave(address asset, uint256 amount) public onlyStrategyOwner returns (bool) {
         IERC20(asset).transferFrom(msg.sender, address(this), amount);
 
         // Input variables
@@ -63,7 +75,7 @@ contract YieldFarmingStrategy is YieldFarmingStrategyCommons {
      * @notice - Allows depositors to enable/disable a specific deposited asset as collateral
      * @param asset - The address of the underlying asset deposited
      */
-    function collateralToAave(address asset) public returns (bool) {
+    function collateralToAave(address asset) public onlyStrategyOwner returns (bool) {
         bool useAsCollateral = true; // [Note]: `true` if the user wants to use the deposit as collateral, `false` otherwise
         lendingPool.setUserUseReserveAsCollateral(asset, useAsCollateral);
     }
@@ -75,7 +87,7 @@ contract YieldFarmingStrategy is YieldFarmingStrategyCommons {
         address asset,
         uint256 amount,
         uint256 interestRateMode
-    ) public returns (bool) {
+    ) public onlyStrategyOwner returns (bool) {
         //address daiAddress = address(0x6B175474E89094C44Da98b954EedeAC495271d0F); // mainnet DAI
         //uint256 amount = 1000 * 1e18;
         //uint interestRateMode       /// @notice - the type of borrow debt. Stable: 1, Variable: 2
@@ -86,7 +98,7 @@ contract YieldFarmingStrategy is YieldFarmingStrategyCommons {
         UserForAaveMarket memory userForAaveMarket = getUserForAaveMarket(asset, msg.sender);
         uint _borrowingAmount = userForAaveMarket.borrowingAmount;
         uint borrowingLimitAmount = userForAaveMarket.lendingAmount.mul(60).div(100);  /// [Note]: A user can borrow until 60% of amount lended
-        require(_borrowingAmount <= borrowingLimitAmount, "Borrowing amount must be smaller than 60% of amount lended");
+        require(_borrowingAmount <= borrowingLimitAmount, "YieldFarmingStrategy: Borrowing amount must be smaller than 60% of amount lended");
 
         /// Borrow method call
         lendingPool.borrow(asset, amount, interestRateMode, referralCode, onBehalfOf);
@@ -98,7 +110,7 @@ contract YieldFarmingStrategy is YieldFarmingStrategyCommons {
     /**
      * @notice - Deposit ERC20 tokens into the Polycat Pool
      */ 
-    function depositToPolycatPool(address asset, uint256 poolId, uint256 stakeAmount, address referrer) public returns (bool) {
+    function depositToPolycatPool(address asset, uint256 poolId, uint256 stakeAmount, address referrer) public onlyStrategyOwner returns (bool) {
         // Approve the MasterChef contract to move your DAI
         IERC20(asset).approve(MASTER_CHEF, stakeAmount);
 
