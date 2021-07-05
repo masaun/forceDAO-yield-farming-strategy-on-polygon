@@ -22,6 +22,7 @@ contract YieldFarmingStrategyFactory {
 
     address[] yieldFarmingStrategies;
     mapping (address => address) public strategyOwners;  /// [Note]: Contract address of the YieldFarmingStrategy.sol -> User address
+    event YieldFarmingStrategyCreated(address indexed strategyOwner, YieldFarmingStrategy indexed yieldFarmingStrategy);
 
     ILendingPoolAddressesProvider public provider;
     MasterChef public masterChef;
@@ -43,5 +44,8 @@ contract YieldFarmingStrategyFactory {
 
         // Associate a owner (creator) address with a YieldFarmingStrategy created
         strategyOwners[YIELD_FARMING_STRATEGY] = msg.sender;
+
+        // Event
+        emit YieldFarmingStrategyCreated(msg.sender, yieldFarmingStrategy);
     }
 }

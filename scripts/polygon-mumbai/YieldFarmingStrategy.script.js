@@ -75,6 +75,9 @@ async function main() {
     await DeploySmartContracts()
     //await getLpTokenListOfEachPools()
 
+    console.log("\n------------- Workflow of YieldFarmingStrategyFactory contract -------------")
+    await createNewYieldFarmingStrategy()
+
     console.log("\n------------- Workflow of AAVE -------------")
     await lendToAave()
     await collateralizeForAave()
@@ -163,6 +166,14 @@ async function getLpTokenListOfEachPools() {
     }
 
     return lpTokenListOfEachPools
+}
+
+
+///---------------------------------------------
+/// Workflow of YieldFarmingStrategyFactory.sol
+///---------------------------------------------
+async function createNewYieldFarmingStrategy() {
+    const txReceipt = await yieldFarmingStrategyFactory.createNewYieldFarmingStrategy({ from: deployer })
 }
 
 
