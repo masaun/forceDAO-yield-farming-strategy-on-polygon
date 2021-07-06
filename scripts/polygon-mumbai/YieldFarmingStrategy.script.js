@@ -216,7 +216,7 @@ async function lendToAave() {
     /// [Actual code]: Using yieldFarmingStrategy.lendToAave()
     let txReceipt1 = await daiToken.approve(YIELD_FARMING_STRATEGY, amount, { from: deployer })
     let txReceipt2 = await yieldFarmingStrategy.lendToAave(asset, amount, { from: deployer })
-    console.log('=== txReceipt2 (lendToAave method) ===', txReceipt2)
+    console.log('=== Tx-Hash (lendToAave method) ===', txReceipt2.tx)
 }
 
 async function collateralizeForAave() {
@@ -227,7 +227,7 @@ async function collateralizeForAave() {
 
     /// [Actual code]: Using yieldFarmingStrategy.collateralToAave()
     let txReceipt = await yieldFarmingStrategy.collateralToAave(asset, { from: deployer })
-    console.log('=== txReceipt (setUserUseReserveAsCollateral method) ===', txReceipt)
+    console.log('=== Tx-Hash (setUserUseReserveAsCollateral method) ===', txReceipt.tx)
 }
 
 async function borrowFromAave() {
@@ -243,7 +243,7 @@ async function borrowFromAave() {
 
     /// [Actual code]: Using yieldFarmingStrategy.borrowFromAave()
     let txReceipt = await yieldFarmingStrategy.borrowFromAave(asset, amount, interestRateMode, { from: deployer })
-    console.log('=== txReceipt (borrowFromAave method) ===', txReceipt)
+    console.log('=== Tx-Hash (borrowFromAave method) ===', txReceipt.tx)
 }
 
 
@@ -263,12 +263,12 @@ async function addToPolycatPool() {
         const lpToken = DAI_TOKEN   /// [Note]: Using ERC20 Token (DAI) as a single staking pool
         const depositFeeBP = 4      /// [Note]: Deposit Fee == 4%
         let txReceipt = await masterChef.add(allocPoint, lpToken, depositFeeBP, { from: deployer })
-        console.log('=== txReceipt (add method of the Polycat.finance) ===', txReceipt)
+        console.log('=== Tx-Hash (add method of the Polycat.finance) ===', txReceipt.tx)
     }
 }
 
 async function depositToPolycatPool() {
-    console.log("deposit() - User1 stake 10 DAI at block 310")
+    console.log("deposit() - User1 stake 10 DAI")
     /// [Note]: Block to mint the FishToken start from block 300.
     /// User1 stake (deposit) 10 DAI tokens at block 310.
     const poolId = 0                 /// Pool ID = 0 is the Pool for the DAI
@@ -282,7 +282,7 @@ async function depositToPolycatPool() {
     /// [Actual code]: Using yieldFarmingStrategy.depositToPolycatPool()
     //let txReceipt1 = await daiToken.approve(YIELD_FARMING_STRATEGY, stakeAmount, { from: deployer })
     let txReceipt2 = await yieldFarmingStrategy.depositToPolycatPool(DAI_TOKEN, poolId, stakeAmount, referrer, { from: deployer })
-    console.log('=== txReceipt (deposit method of the Polycat.finance) ===', txReceipt2)
+    console.log('=== Tx-Hash (deposit method of the Polycat.finance) ===', txReceipt2.tx)
 }
 
 
