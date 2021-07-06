@@ -14,7 +14,6 @@ function fromWei(amount) {
 async function getEvents(contractInstance, eventName) {
     const _latestBlock = await getCurrentBlock()
     const LATEST_BLOCK = Number(String(_latestBlock))
-    console.log('=== LATEST_BLOCK ===', LATEST_BLOCK)
 
     /// [Note]: Retrieve an event log of eventName (via web3.js v1.0.0)
     let events = await contractInstance.getPastEvents(eventName, {

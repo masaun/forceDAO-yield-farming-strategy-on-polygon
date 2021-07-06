@@ -34,14 +34,13 @@ const AM_DAI_TOKEN = tokenAddressList["Polygon Mumbai"]["ERC20"]["amDAI"]
 const VARIABLE_DEBT_MDAI_TOKEN = tokenAddressList["Polygon Mumbai"]["AAVE"]["variableDebtmDAI"]  /// [Note]: Aave Matic Market variable debt mDAI
 const INCENTIVES_CONTROLLER = contractAddressList["Polygon Mumbai"]["AAVE"]["IncentivesController"]
 
-
 /// Deployed-addresses on Polygon Mumbai ([Todo]: Finally, it will be replaced with contractAddressList/tokenAddressList)
-const YIELD_FARMING_STRATEGY_FACTORY = YieldFarmingStrategyFactory.address
-const FISH_TOKEN = FishToken.address
-const MASTER_CHEF = MasterChef.address
-// const YIELD_FARMING_STRATEGY = contractAddressList["Polygon Mumbai"]["YieldFarmingStrategy"]["YieldFarmingStrategy"]
-// const FISH_TOKEN = tokenAddressList["Polygon Mumbai"]["Polycat"]["FishToken"]
-// const MASTER_CHEF = contractAddressList["Polygon Mumbai"]["Polycat"]["MasterChef"]
+const YIELD_FARMING_STRATEGY_FACTORY = contractAddressList["Polygon Mumbai"]["ForceDAOYieldFarmingStrategy"]["YieldFarmingStrategyFactory"]
+const FISH_TOKEN = tokenAddressList["Polygon Mumbai"]["Polycat"]["FishToken"]
+const MASTER_CHEF = contractAddressList["Polygon Mumbai"]["Polycat"]["MasterChef"]
+// const YIELD_FARMING_STRATEGY_FACTORY = YieldFarmingStrategyFactory.address
+// const FISH_TOKEN = FishToken.address
+// const MASTER_CHEF = MasterChef.address
 
 let YIELD_FARMING_STRATEGY
 
@@ -167,14 +166,11 @@ async function DeploySmartContracts() {
 async function getLpTokenListOfEachPools() {
     const _poolLength = await masterChef.poolLength()
     const currentPoolLength = Number(String(_poolLength))
-    console.log('=== Pool length in the MasterChef ===', currentPoolLength)
 
     let lpTokenListOfEachPools = []
     for (poolId = 0; poolId < currentPoolLength; ++poolId) {
         const _poolInfo = await masterChef.poolInfo(poolId)
         const lpToken = _poolInfo["0"]
-        console.log('=== lpToken of PoolInfo ===', lpToken) 
-
         lpTokenListOfEachPools.push(lpToken)
     }
 
@@ -188,7 +184,7 @@ async function getLpTokenListOfEachPools() {
 async function createNewYieldFarmingStrategy() {
     console.log("Create a new YieldFarmingStrategy")
     const txReceipt = await yieldFarmingStrategyFactory.createNewYieldFarmingStrategy({ from: deployer })
-    console.log('=== txReceipt of createNewYieldFarmingStrategy() ===', txReceipt)
+    console.log('=== Tx-Hash of createNewYieldFarmingStrategy() ===', txReceipt.tx)
 
     /// [Todo]: Retrieve the result the YieldFarmingStrategyCreated event
     let event = await getEvents(yieldFarmingStrategyFactory, "YieldFarmingStrategyCreated")
@@ -216,7 +212,7 @@ async function lendToAave() {
     /// [Actual code]: Using yieldFarmingStrategy.lendToAave()
     let txReceipt1 = await daiToken.approve(YIELD_FARMING_STRATEGY, amount, { from: deployer })
     let txReceipt2 = await yieldFarmingStrategy.lendToAave(asset, amount, { from: deployer })
-    console.log('=== txReceipt2 (lendToAave method) ===', txReceipt2)
+    console.log('=== Tx-Hash of lendToAave() ===', txReceipt2.tx)
 }
 
 async function collateralizeForAave() {
@@ -227,7 +223,7 @@ async function collateralizeForAave() {
 
     /// [Actual code]: Using yieldFarmingStrategy.collateralToAave()
     let txReceipt = await yieldFarmingStrategy.collateralToAave(asset, { from: deployer })
-    console.log('=== txReceipt (setUserUseReserveAsCollateral method) ===', txReceipt)
+    console.log('=== Tx-Hash of collateralToAave() ===', txReceipt.tx)
 }
 
 async function borrowFromAave() {
@@ -243,7 +239,7 @@ async function borrowFromAave() {
 
     /// [Actual code]: Using yieldFarmingStrategy.borrowFromAave()
     let txReceipt = await yieldFarmingStrategy.borrowFromAave(asset, amount, interestRateMode, { from: deployer })
-    console.log('=== txReceipt (borrowFromAave method) ===', txReceipt)
+    console.log('=== Tx-Hash of borrowFromAave() ===', txReceipt.tx)
 }
 
 
@@ -263,12 +259,12 @@ async function addToPolycatPool() {
         const lpToken = DAI_TOKEN   /// [Note]: Using ERC20 Token (DAI) as a single staking pool
         const depositFeeBP = 4      /// [Note]: Deposit Fee == 4%
         let txReceipt = await masterChef.add(allocPoint, lpToken, depositFeeBP, { from: deployer })
-        console.log('=== txReceipt (add method of the Polycat.finance) ===', txReceipt)
+        console.log('=== Tx-Hash of add() in the Polycat.finance ===', txReceipt.tx)
     }
 }
 
 async function depositToPolycatPool() {
-    console.log("deposit() - User1 stake 10 DAI at block 310")
+    console.log("deposit() - A user stake 10 DAI into the Polycat's DAI Pool")
     /// [Note]: Block to mint the FishToken start from block 300.
     /// User1 stake (deposit) 10 DAI tokens at block 310.
     const poolId = 0                 /// Pool ID = 0 is the Pool for the DAI
@@ -282,7 +278,7 @@ async function depositToPolycatPool() {
     /// [Actual code]: Using yieldFarmingStrategy.depositToPolycatPool()
     //let txReceipt1 = await daiToken.approve(YIELD_FARMING_STRATEGY, stakeAmount, { from: deployer })
     let txReceipt2 = await yieldFarmingStrategy.depositToPolycatPool(DAI_TOKEN, poolId, stakeAmount, referrer, { from: deployer })
-    console.log('=== txReceipt (deposit method of the Polycat.finance) ===', txReceipt2)
+    console.log('=== Tx-Hash of deposit() in the Polycat.finance) ===', txReceipt2.tx)
 }
 
 
@@ -296,7 +292,7 @@ async function getHarvestedAmount() {
     let pendingFish = await yieldFarmingStrategy.getPendingFish(poolId, { from: deployer })
     console.log('=== Pending Fish Tokens amount ===', fromWei(pendingFish))
 
-    console.log("Check current rewards amount of AAVE")
+    console.log("\n Check current rewards amount of AAVE")
     const assets = [AM_DAI_TOKEN]  /// i.e). aTokens or debtTokens.
     let rewardsBalance = await yieldFarmingStrategy.getAaveRewardsBalance(assets, { from: deployer })
     console.log('=== Rewards amount of AAVE ===', fromWei(rewardsBalance))
