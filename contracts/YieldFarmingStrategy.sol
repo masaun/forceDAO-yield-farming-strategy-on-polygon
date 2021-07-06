@@ -137,6 +137,15 @@ contract YieldFarmingStrategy is YieldFarmingStrategyCommons {
         _saveRecordOfDepositingToPolycatPool(msg.sender, poolId, stakeAmount);
     }
 
+    /**
+     * @notice - Claims reward for an user, on all the assets of the lending pool, accumulating the pending rewards
+     * @param amount - Amount of rewards to claim
+     **/
+    function claimRewardsForAave(address[] calldata assets, uint256 amount) public onlyStrategyOwner returns (bool) {
+        // [Note]: Caller is checked by the onlyStrategyOwner modifier in advance.
+        uint rewardsClaimed = incentivesController.claimRewards(assets, amount, msg.sender);
+    }
+
     function withdrawFromPolycatPool(address asset, uint256 poolId, uint256 unstakeAmount) public onlyStrategyOwner returns (bool) {
         // [Note]: Caller is checked by the onlyStrategyOwner modifier in advance.
         masterChef.withdraw(poolId, unstakeAmount);
