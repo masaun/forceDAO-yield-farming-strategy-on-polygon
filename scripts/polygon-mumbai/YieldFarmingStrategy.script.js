@@ -34,14 +34,13 @@ const AM_DAI_TOKEN = tokenAddressList["Polygon Mumbai"]["ERC20"]["amDAI"]
 const VARIABLE_DEBT_MDAI_TOKEN = tokenAddressList["Polygon Mumbai"]["AAVE"]["variableDebtmDAI"]  /// [Note]: Aave Matic Market variable debt mDAI
 const INCENTIVES_CONTROLLER = contractAddressList["Polygon Mumbai"]["AAVE"]["IncentivesController"]
 
-
 /// Deployed-addresses on Polygon Mumbai ([Todo]: Finally, it will be replaced with contractAddressList/tokenAddressList)
-const YIELD_FARMING_STRATEGY_FACTORY = YieldFarmingStrategyFactory.address
-const FISH_TOKEN = FishToken.address
-const MASTER_CHEF = MasterChef.address
-// const YIELD_FARMING_STRATEGY = contractAddressList["Polygon Mumbai"]["YieldFarmingStrategy"]["YieldFarmingStrategy"]
-// const FISH_TOKEN = tokenAddressList["Polygon Mumbai"]["Polycat"]["FishToken"]
-// const MASTER_CHEF = contractAddressList["Polygon Mumbai"]["Polycat"]["MasterChef"]
+const YIELD_FARMING_STRATEGY_FACTORY = contractAddressList["Polygon Mumbai"]["ForceDAOYieldFarmingStrategy"]["YieldFarmingStrategyFactory"]
+const FISH_TOKEN = tokenAddressList["Polygon Mumbai"]["Polycat"]["FishToken"]
+const MASTER_CHEF = contractAddressList["Polygon Mumbai"]["Polycat"]["MasterChef"]
+// const YIELD_FARMING_STRATEGY_FACTORY = YieldFarmingStrategyFactory.address
+// const FISH_TOKEN = FishToken.address
+// const MASTER_CHEF = MasterChef.address
 
 let YIELD_FARMING_STRATEGY
 
