@@ -14,6 +14,7 @@ import { ILendingPoolAddressesProvider } from './aave-v2/interfaces/ILendingPool
 import { IAaveIncentivesController } from "./aave-v2/interfaces/IAaveIncentivesController.sol";
 
 // Polycat.finanace
+import { FishToken } from "./polycat/Farm/FishToken.sol";
 import { MasterChef } from "./polycat/Farm/MasterChef.sol";
 
 /**
@@ -27,11 +28,18 @@ contract YieldFarmingStrategyFactory {
 
     ILendingPoolAddressesProvider public provider;
     IAaveIncentivesController public incentivesController;
+    FishToken public fishToken;
     MasterChef public masterChef;
 
-    constructor(ILendingPoolAddressesProvider _provider, IAaveIncentivesController _incentivesController, MasterChef _masterChef) public {
+    constructor(
+        ILendingPoolAddressesProvider _provider, 
+        IAaveIncentivesController _incentivesController, 
+        FishToken _fishToken, 
+        MasterChef _masterChef
+    ) public {
         provider = _provider;
         incentivesController = _incentivesController;
+        fishToken = _fishToken;
         masterChef = _masterChef;
     }
 
@@ -39,7 +47,7 @@ contract YieldFarmingStrategyFactory {
      * @notice - Create a new YieldFarmingStrategy contract
      */
     function createNewYieldFarmingStrategy() public returns (bool) {
-        YieldFarmingStrategy yieldFarmingStrategy = new YieldFarmingStrategy(provider, incentivesController, masterChef, msg.sender);
+        YieldFarmingStrategy yieldFarmingStrategy = new YieldFarmingStrategy(provider, incentivesController, fishToken, masterChef, msg.sender);
         address YIELD_FARMING_STRATEGY = address(yieldFarmingStrategy);
 
         // Save a YieldFarmingStrategy created into the list of all YieldFarmingStrategies
