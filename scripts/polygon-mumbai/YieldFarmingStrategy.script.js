@@ -95,6 +95,10 @@ async function main() {
 
     console.log("\n------------- Check amount harvested ------------")
     await getHarvestedAmount()
+
+    console.log("\n------------- Workflow of claiming rewards ------------")
+    await withdrawFromPolycatPool()
+    await claimRewardsForAave()
 }
 
 
@@ -296,4 +300,23 @@ async function getHarvestedAmount() {
     const assets = [AM_DAI_TOKEN]  /// i.e). aTokens or debtTokens.
     let rewardsBalance = await yieldFarmingStrategy.getAaveRewardsBalance(assets, { from: deployer })
     console.log('=== Rewards amount of AAVE ===', fromWei(rewardsBalance))
+}
+
+
+///-----------------------------------
+/// Claim rewards
+///-----------------------------------
+
+async function withdrawFromPolycatPool() {
+    console.log("withdrawFromPolycatPool() - A user unstake 10 DAI from the Polycat's DAI Pool and receive reward tokens ($FISH tokens)")
+    const poolId = 0  /// Pool ID = 0 is the Pool for the DAI    
+    let pendingFish = await yieldFarmingStrategy.getPendingFish(poolId, { from: deployer })
+    let txReceipt = await yieldFarmingStrategy.withdrawFromPolycatPool(DAI_TOKEN, poolId, pendingFish, { from: deployer })
+}
+
+async function claimRewardsForAave() {
+    console.log("claimRewardsForAave() - A user claim rewards for AAVE")
+    const assets = [AM_DAI_TOKEN]  /// i.e). aTokens or debtTokens.
+    let rewardsBalance = await yieldFarmingStrategy.getAaveRewardsBalance(assets, { from: deployer })
+    let txReceipt = await yieldFarmingStrategy.claimRewardsForAave(assets, rewardsBalance, { from: deployer })
 }
