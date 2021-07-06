@@ -10,10 +10,10 @@ module.exports = {
             "IncentivesController": "0xd41aE58e803Edf4304334acCE4DC4Ec34a63C644"
         },
         "Polycat": {
-            "MasterChef": "0xc842154CED14f79BdccCB1eAf25637cA63eB3C17"
+            "MasterChef": "0x203D646B6d228E83aff613f9f04D59e63ab2C5d4"
         },
         "ForceDAOYieldFarmingStrategy": {
-            "YieldFarmingStrategyFactory": "0x96D2896504f0EB97A63ec824eB2de3f50D36aFF2"
+            "YieldFarmingStrategyFactory": "0xCdf34b8d1A739c463AD318Ba94ae735dCc277a08"
         }
     }
 }
