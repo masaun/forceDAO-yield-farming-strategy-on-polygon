@@ -24,12 +24,16 @@ const MasterChef = artifacts.require("MasterChef")
 const FishToken = artifacts.require("FishToken")
 const IERC20 = artifacts.require("IERC20")
 const ILendingPool = artifacts.require("ILendingPool")
+const IAaveIncentivesController = artifacts.require("IAaveIncentivesController")
 
 /// Deployed-addresses on Polygon Mumbai
 const LENDING_POOL_ADDRESSES_PROVIDER = contractAddressList["Polygon Mumbai"]["AAVE"]["LendingPoolAddressesProvider"]
 const LENDING_POOL = contractAddressList["Polygon Mumbai"]["AAVE"]["LendingPool"]
 const DAI_TOKEN = tokenAddressList["Polygon Mumbai"]["ERC20"]["DAI"]
+const AM_DAI_TOKEN = tokenAddressList["Polygon Mumbai"]["ERC20"]["amDAI"]
 const VARIABLE_DEBT_MDAI_TOKEN = tokenAddressList["Polygon Mumbai"]["AAVE"]["variableDebtmDAI"]  /// [Note]: Aave Matic Market variable debt mDAI
+const INCENTIVES_CONTROLLER = contractAddressList["Polygon Mumbai"]["AAVE"]["IncentivesController"]
+
 
 /// Deployed-addresses on Polygon Mumbai ([Todo]: Finally, it will be replaced with contractAddressList/tokenAddressList)
 const YIELD_FARMING_STRATEGY_FACTORY = YieldFarmingStrategyFactory.address
@@ -49,6 +53,7 @@ let variableDebtmDAI   /// [Note]: Aave Matic Market variable debt mDAI
 let fishToken
 let masterChef
 let lendingPool
+let incentivesController
 
 /// Acccounts
 let deployer
@@ -118,6 +123,9 @@ async function DeploySmartContracts() {
 
     console.log("Create the MasterChef contract instance")
     masterChef = await MasterChef.at(MASTER_CHEF)
+
+    console.log("Create the IncentivesController contract instance")
+    incentivesController = await IAaveIncentivesController.at(INCENTIVES_CONTROLLER)
 
     //console.log("Create the YieldFarmingStrategy contract instance")
     //yieldFarmingStrategy = await YieldFarmingStrategy.at(YIELD_FARMING_STRATEGY)
@@ -289,7 +297,7 @@ async function getHarvestedAmount() {
     console.log('=== Pending Fish Tokens amount ===', fromWei(pendingFish))
 
     console.log("Check current rewards amount of AAVE")
-    const assets = [DAI_TOKEN]  
+    const assets = [AM_DAI_TOKEN]  /// i.e). aTokens or debtTokens.
     let rewardsBalance = await yieldFarmingStrategy.getAaveRewardsBalance(assets, { from: deployer })
     console.log('=== Rewards amount of AAVE ===', fromWei(rewardsBalance))
 }
