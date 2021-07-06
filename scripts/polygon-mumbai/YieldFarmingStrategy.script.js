@@ -88,6 +88,9 @@ async function main() {
     console.log("\n------------- Workflow of the Polycat.finance ------------")
     await addToPolycatPool()
     await depositToPolycatPool()
+
+    console.log("\n------------- Check amount harvested ------------")
+    await getHarvestedAmount()
 }
 
 
@@ -279,6 +282,14 @@ async function depositToPolycatPool() {
 /// Check each amount harvested
 ///-----------------------------------
 
-async function harvestedAmount() {
-    
+async function getHarvestedAmount() {
+    console.log("Check current pending FishTokens amount")
+    const poolId = 0  /// Pool ID = 0 is the Pool for the DAI    
+    let pendingFish = await yieldFarmingStrategy.getPendingFish(poolId, { from: deployer })
+    console.log('=== Pending Fish Tokens amount ===', fromWei(pendingFish))
+
+    console.log("Check current rewards amount of AAVE")
+    const assets = [DAI_TOKEN]  
+    let rewardsBalance = await yieldFarmingStrategy.getAaveRewardsBalance(assets, { from: deployer })
+    console.log('=== Rewards amount of AAVE ===', fromWei(rewardsBalance))
 }
