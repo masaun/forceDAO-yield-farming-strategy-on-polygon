@@ -7,7 +7,11 @@
 ***
 
 ## 【Workflow】
-- Diagram of workflow: https://gitcoin.co/issue/ForceDAO/bounties/5/100025916
+- ① 
+- ②
+- ③
+
+- Diagram of workflow: 
 
 
 &nbsp;
@@ -43,20 +47,23 @@ npm run migrate:local
 
 <br>
 
-### ③ Script
+### ③ Script for DEMO
+- 1: Get DAI on Polygon mumbai testnet by using the Fancet on Pods
+   https://blog.pods.finance/guide-connecting-mumbai-testnet-to-your-metamask-87978071aca8
+
+<br>
+
+- 2: Execute a script
 ```
 npm run script:YieldFarmingStrategy
 ```
 
 <br>
 
-### ③ Test (on local)
+### ③ Unit test (on local)
 - 1: Start ganache-cli
 ```
 $ ganache-cli -d --fork https://polygon-mainnet.infura.io/v3/{YOUR INFURA KEY}@{BLOCK_NUMBER}
-```
-```
-$ ganache-cli -d --fork https://polygon-mumbai.infura.io/v3/{YOUR INFURA KEY}@{BLOCK_NUMBER}
 ```
 (※ `-d` option is the option in order to be able to use same address on Ganache-CLI every time)  
 (※ Please stop and re-start if an error of `"Returned error: project ID does not have access to archive state"` is displayed)  

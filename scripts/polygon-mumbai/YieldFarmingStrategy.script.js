@@ -348,7 +348,7 @@ async function claimRewardsForAave() {
 /// Check rewards amount harvested
 ///-----------------------------------
 
-///@notice - Check pending rewards amount that is pending on contract
+///@notice - Check a user wallet balance after rewards are claimed.
 async function getRewardsAmountHarvested() {
     console.log("Check the FishToken balance (that is received as rewards of Polycat.finance) in a user wallet")
     let fishTokenBalance = await fishToken.balanceOf(deployer)
