@@ -97,15 +97,15 @@ async function main() {
     console.log("\n------------- Check rewards amount to be harvested (pending rewards amount) ------------")
     await getPendingRewardsAmount()
 
-    console.log("\n------------- Check a user wallet balance before rewards are claimed ------------")
-    await getWalletBalanceBeforeRewardsAreClaimed()
+    // console.log("\n------------- Check a user wallet balance before rewards are claimed ------------")
+    // await getWalletBalanceBeforeRewardsAreClaimed()
 
     console.log("\n------------- Workflow of claiming rewards ------------")
     await withdrawFromPolycatPool()
     await claimRewardsForAave()
 
-    console.log("\n------------- Check a user wallet balance after rewards are claimed (Check rewards amount harvested) ------------")
-    await getRewardsAmountHarvested()
+    // console.log("\n------------- Check a user wallet balance after rewards are claimed (Check rewards amount harvested) ------------")
+    // await getRewardsAmountHarvested()
 }
 
 
@@ -317,15 +317,15 @@ async function getPendingRewardsAmount() {
 ///---------------------------------------------------------
 
 ///@notice - Check pending rewards amount that is pending on contract
-async function getWalletBalanceBeforeRewardsAreClaimed() {
-    console.log("Check the FishToken balance in a user wallet before rewards are claimed")
-    let fishTokenBalance = await fishToken.balanceOf(deployer)
-    console.log('=== FishToken balance in a user wallet before rewards are claimed ===', fromWei(fishTokenBalance))
+// async function getWalletBalanceBeforeRewardsAreClaimed() {
+//     console.log("Check the FishToken balance in a user wallet before rewards are claimed")
+//     let fishTokenBalance = await fishToken.balanceOf(deployer)
+//     console.log('=== FishToken balance in a user wallet before rewards are claimed ===', fromWei(fishTokenBalance))
 
-    console.log("\n Check the DAI balance in a user wallet before rewards are claimed")
-    let daiBalance = await daiToken.balanceOf(deployer)
-    console.log('=== DAI balance in a user wallet before rewards are claimed ===', fromWei(daiBalance))
-}
+//     console.log("\n Check the DAI balance in a user wallet before rewards are claimed")
+//     let daiBalance = await daiToken.balanceOf(deployer)
+//     console.log('=== DAI balance in a user wallet before rewards are claimed ===', fromWei(daiBalance))
+// }
 
 
 ///-----------------------------------
@@ -351,12 +351,12 @@ async function claimRewardsForAave() {
 ///-----------------------------------
 
 ///@notice - Check a user wallet balance after rewards are claimed.
-async function getRewardsAmountHarvested() {
-    console.log("Check the FishToken balance (that is received as rewards of Polycat.finance) in a user wallet")
-    let fishTokenBalance = await fishToken.balanceOf(deployer)
-    console.log('=== FishToken balance in a user wallet ===', fromWei(fishTokenBalance))
+// async function getRewardsAmountHarvested() {
+//     console.log("Check the FishToken balance (that is received as rewards of Polycat.finance) in a user wallet")
+//     let fishTokenBalance = await fishToken.balanceOf(deployer)
+//     console.log('=== FishToken balance in a user wallet ===', fromWei(fishTokenBalance))
 
-    console.log("\n Check the DAI balance (that is received as rewards of AAVE) in a user wallet")
-    let daiBalance = await daiToken.balanceOf(deployer)
-    console.log('=== DAI balance in a user wallet ===', fromWei(daiBalance))
-}
+//     console.log("\n Check the DAI balance (that is received as rewards of AAVE) in a user wallet")
+//     let daiBalance = await daiToken.balanceOf(deployer)
+//     console.log('=== DAI balance in a user wallet ===', fromWei(daiBalance))
+// }
