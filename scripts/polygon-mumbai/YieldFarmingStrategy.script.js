@@ -30,6 +30,7 @@ const IAaveIncentivesController = artifacts.require("IAaveIncentivesController")
 const LENDING_POOL_ADDRESSES_PROVIDER = contractAddressList["Polygon Mumbai"]["AAVE"]["LendingPoolAddressesProvider"]
 const LENDING_POOL = contractAddressList["Polygon Mumbai"]["AAVE"]["LendingPool"]
 const DAI_TOKEN = tokenAddressList["Polygon Mumbai"]["ERC20"]["DAI"]
+const USDC_TOKEN = tokenAddressList["Polygon Mumbai"]["ERC20"]["USDC"]
 const AM_DAI_TOKEN = tokenAddressList["Polygon Mumbai"]["ERC20"]["amDAI"]
 const VARIABLE_DEBT_MDAI_TOKEN = tokenAddressList["Polygon Mumbai"]["AAVE"]["variableDebtmDAI"]  /// [Note]: Aave Matic Market variable debt mDAI
 const INCENTIVES_CONTROLLER = contractAddressList["Polygon Mumbai"]["AAVE"]["IncentivesController"]
@@ -209,7 +210,8 @@ async function createNewYieldFarmingStrategy() {
 /// Workflow of AAVE
 ///-------------------------------------
 async function lendToAave() {
-    const asset = DAI_TOKEN         /// @notice - address of the underlying asset
+    //const asset = USDC_TOKEN       /// @notice - USDC address of the underlying asset
+    const asset = DAI_TOKEN          /// @notice - DAI address of the underlying asset
     const amount = toWei("100")      /// 100 DAI
     // const onBehalfOf = deployer  /// @notice - address whom will receive the aTokens. 
     // const referralCode = 0       /// @notice - Use 0 for no referral.
@@ -348,7 +350,7 @@ async function claimRewardsForAave() {
 /// Check rewards amount harvested
 ///-----------------------------------
 
-///@notice - Check pending rewards amount that is pending on contract
+///@notice - Check a user wallet balance after rewards are claimed.
 async function getRewardsAmountHarvested() {
     console.log("Check the FishToken balance (that is received as rewards of Polycat.finance) in a user wallet")
     let fishTokenBalance = await fishToken.balanceOf(deployer)
