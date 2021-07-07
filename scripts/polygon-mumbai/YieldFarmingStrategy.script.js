@@ -93,12 +93,18 @@ async function main() {
     await addToPolycatPool()
     await depositToPolycatPool()
 
-    console.log("\n------------- Check amount harvested ------------")
-    await getHarvestedAmount()
+    console.log("\n------------- Check rewards amount to be harvested (pending rewards amount) ------------")
+    await getPendingRewardsAmount()
+
+    console.log("\n------------- Check a user wallet balance before rewards are claimed ------------")
+    await getWalletBalanceBeforeRewardsAreClaimed()
 
     console.log("\n------------- Workflow of claiming rewards ------------")
     await withdrawFromPolycatPool()
     await claimRewardsForAave()
+
+    console.log("\n------------- Check a user wallet balance after rewards are claimed (Check rewards amount harvested) ------------")
+    await getRewardsAmountHarvested()
 }
 
 
@@ -286,27 +292,43 @@ async function depositToPolycatPool() {
 }
 
 
-///-----------------------------------
-/// Check each amount harvested
-///-----------------------------------
+///----------------------------------------------------------------
+/// Check rewards amount to be harvested (pending rewards amount)
+///----------------------------------------------------------------
 
-async function getHarvestedAmount() {
-    console.log("Check current pending FishTokens amount")
+///@notice - Check pending rewards amount that is pending on contract
+async function getPendingRewardsAmount() {
+    console.log("Check current pending rewards amount (FishTokens amount) of Polycat.finance")
     const poolId = 0  /// Pool ID = 0 is the Pool for the DAI    
     let pendingFish = await yieldFarmingStrategy.getPendingFish(poolId, { from: deployer })
     console.log('=== Pending Fish Tokens amount ===', fromWei(pendingFish))
 
-    console.log("\n Check current rewards amount of AAVE")
+    console.log("\n Check current pending rewards amount of AAVE")
     const assets = [AM_DAI_TOKEN]  /// i.e). aTokens or debtTokens.
     let rewardsBalance = await yieldFarmingStrategy.getAaveRewardsBalance(assets, { from: deployer })
     console.log('=== Rewards amount of AAVE ===', fromWei(rewardsBalance))
 }
 
 
+///---------------------------------------------------------
+/// Check a user wallet balance before rewards are claimed
+///---------------------------------------------------------
+
+///@notice - Check pending rewards amount that is pending on contract
+async function getWalletBalanceBeforeRewardsAreClaimed() {
+    console.log("Check the FishToken balance in a user wallet before rewards are claimed")
+    let fishTokenBalance = await fishToken.balanceOf(deployer)
+    console.log('=== FishToken balance in a user wallet before rewards are claimed ===', fromWei(fishTokenBalance))
+
+    console.log("\n Check the DAI balance in a user wallet before rewards are claimed")
+    let daiBalance = await daiToken.balanceOf(deployer)
+    console.log('=== DAI balance in a user wallet before rewards are claimed ===', fromWei(daiBalance))
+}
+
+
 ///-----------------------------------
 /// Claim rewards
 ///-----------------------------------
-
 async function withdrawFromPolycatPool() {
     console.log("withdrawFromPolycatPool() - A user unstake 10 DAI from the Polycat's DAI Pool and receive reward tokens ($FISH tokens)")
     const poolId = 0  /// Pool ID = 0 is the Pool for the DAI    
@@ -319,4 +341,20 @@ async function claimRewardsForAave() {
     const assets = [AM_DAI_TOKEN]  /// i.e). aTokens or debtTokens.
     let rewardsBalance = await yieldFarmingStrategy.getAaveRewardsBalance(assets, { from: deployer })
     let txReceipt = await yieldFarmingStrategy.claimRewardsForAave(assets, rewardsBalance, { from: deployer })
+}
+
+
+///-----------------------------------
+/// Check rewards amount harvested
+///-----------------------------------
+
+///@notice - Check pending rewards amount that is pending on contract
+async function getRewardsAmountHarvested() {
+    console.log("Check the FishToken balance (that is received as rewards of Polycat.finance) in a user wallet")
+    let fishTokenBalance = await fishToken.balanceOf(deployer)
+    console.log('=== FishToken balance in a user wallet ===', fromWei(fishTokenBalance))
+
+    console.log("\n Check the DAI balance (that is received as rewards of AAVE) in a user wallet")
+    let daiBalance = await daiToken.balanceOf(deployer)
+    console.log('=== DAI balance in a user wallet ===', fromWei(daiBalance))
 }
