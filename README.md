@@ -11,7 +11,7 @@
 
 ## 【Workflow】
 - Diagram of workflow: 
-  ![diagram_forceDAO-yield-farming-strategy-on-polygon](https://user-images.githubusercontent.com/19357502/124755401-4b6c9e80-df66-11eb-8b4b-50ee74fed01d.jpg)
+  ![diagram_ForceDAO](https://user-images.githubusercontent.com/19357502/124762179-963de480-df6d-11eb-95fe-0e58fc46030f.jpg)
 
 &nbsp;
 
