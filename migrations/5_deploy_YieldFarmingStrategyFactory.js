@@ -9,6 +9,7 @@ const YieldFarmingStrategyFactory = artifacts.require("YieldFarmingStrategyFacto
 const MasterChef = artifacts.require("MasterChef")
 const FishToken = artifacts.require("FishToken")
 
+const FISH_TOKEN = FishToken.address
 const MASTER_CHEF = MasterChef.address
 //const MASTER_CHEF = contractAddressList["Polygon Mumbai"]["Polycat"]["MasterChef"]
 
@@ -19,5 +20,5 @@ const INCENTIVES_CONTROLLER = contractAddressList["Polygon Mumbai"]["AAVE"]["Inc
 
 
 module.exports = async function(deployer) {
-    await deployer.deploy(YieldFarmingStrategyFactory, LENDING_POOL_ADDRESSES_PROVIDER, INCENTIVES_CONTROLLER, MASTER_CHEF)
+    await deployer.deploy(YieldFarmingStrategyFactory, LENDING_POOL_ADDRESSES_PROVIDER, INCENTIVES_CONTROLLER, FISH_TOKEN, MASTER_CHEF)
 };

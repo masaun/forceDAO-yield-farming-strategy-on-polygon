@@ -1,6 +1,6 @@
-# ForceDAO - Build your own yield farming strategy on Polygon
-## 【Introduction of the ForceDAO - Automate a DeFi Yield Farming Strategy on Polygon and AAVE】
-- This is a smart contract that 
+# ForceDAO Yield Farming Strategy on Polygon
+## 【Introduction of the ForceDAO Yield Farming Strategy on Polygon】
+- This is a smart contract that deal with a yield farming strategy which use AAVE and Polycat.finance on Polygon.
 
 &nbsp;
 

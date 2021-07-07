@@ -6,7 +6,7 @@ module.exports = {
             "variableDebtmDAI": "0x6D29322ba6549B95e98E9B08033F5ffb857f19c5"
         },
         "Polycat": {
-            "FishToken": "0x36d01c7d00D75E63F296197Df207F2D814c67E84"
+            "FishToken": "0xC0528152e7ADba81f4017D80e3B710b7671F7dE4"
         },
         "ERC20": {
             "DAI": "0x001B3B4d0F3714Ca98ba10F6042DaEbF0B1B7b6F",

@@ -14,6 +14,7 @@ import { ILendingPoolAddressesProvider } from './aave-v2/interfaces/ILendingPool
 import { IAaveIncentivesController } from "./aave-v2/interfaces/IAaveIncentivesController.sol";
 
 // Polycat.finanace
+import { FishToken } from "./polycat/Farm/FishToken.sol";
 import { MasterChef } from "./polycat/Farm/MasterChef.sol";
 
 /**
@@ -25,10 +26,12 @@ contract YieldFarmingStrategy is YieldFarmingStrategyCommons {
     ILendingPoolAddressesProvider public provider;
     ILendingPool public lendingPool;
     IAaveIncentivesController public incentivesController;
+    FishToken public fishToken;
     MasterChef public masterChef;
 
     address LENDING_POOL;
     address INCENTIVES_CONTROLLER;
+    address FISH_TOKEN;
     address MASTER_CHEF;
 
     address STRATEGY_OWNER;
@@ -36,16 +39,19 @@ contract YieldFarmingStrategy is YieldFarmingStrategyCommons {
     constructor(
         ILendingPoolAddressesProvider _provider, 
         IAaveIncentivesController _incentivesController, 
+        FishToken _fishToken,
         MasterChef _masterChef, 
         address _strategyOwner
     ) public {
         provider = _provider;
         lendingPool = ILendingPool(provider.getLendingPool());
         incentivesController = _incentivesController;
+        fishToken = _fishToken;
         masterChef = _masterChef;
 
         LENDING_POOL = provider.getLendingPool();
         INCENTIVES_CONTROLLER = address(incentivesController);
+        FISH_TOKEN = address(fishToken);
         MASTER_CHEF = address(masterChef);
 
         STRATEGY_OWNER = _strategyOwner;
@@ -129,6 +135,28 @@ contract YieldFarmingStrategy is YieldFarmingStrategyCommons {
 
         // Save the record of borrowing to the AAVE market
         _saveRecordOfDepositingToPolycatPool(msg.sender, poolId, stakeAmount);
+    }
+
+    /**
+     * @notice - Claims reward for an user, on all the assets of the lending pool, accumulating the pending rewards
+     * @param amount - Amount of rewards to claim
+     **/
+    function claimRewardsForAave(address[] calldata assets, uint256 amount) public onlyStrategyOwner returns (bool) {
+        // [Note]: Caller is checked by the onlyStrategyOwner modifier in advance.
+        uint rewardsClaimed = incentivesController.claimRewards(assets, amount, msg.sender);
+    }
+
+    function withdrawFromPolycatPool(address asset, uint256 poolId, uint256 unstakeAmount) public onlyStrategyOwner returns (bool) {
+        // [Note]: Caller is checked by the onlyStrategyOwner modifier in advance.
+        masterChef.withdraw(poolId, unstakeAmount);
+        
+        // Transfer rewards tokens ($FISH tokens) into msg.sender
+        uint fishTokenBalance = fishToken.balanceOf(address(this));
+        fishToken.transfer(msg.sender, fishTokenBalance);
+
+        // Transfer ERC20 assets unstaked into msg.sender
+        uint erc20AssetBalance = IERC20(asset).balanceOf(address(this));
+        IERC20(asset).transfer(msg.sender, erc20AssetBalance);
     }
 
 
